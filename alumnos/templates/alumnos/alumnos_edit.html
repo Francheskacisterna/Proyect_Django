@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Datos de Alumno</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        {% if alumno %}
+            <h2>Formulario para Actualizar Datos de Alumno</h2><br>
+            <form action="{% url 'alumnos_Update' alumno.id_alumno %}" method="POST">
+                {% csrf_token %}
+                <pre>Rut:           <input type="text" name="rut" value="{{ alumno.rut }}" readonly></pre>
+                <pre>Nombre:        <input type="text" name="nombre" value="{{ alumno.nombre }}"></pre>
+                <pre>Nivel Educación:<select name="nivel_educacion">
+                                    {% for choice in Alumno.NIVEL_EDUCACION_CHOICES %}
+                                        <option value="{{ choice.0 }}" {% if choice.0 == alumno.nivel_educacion %}selected{% endif %}>{{ choice.1 }}</option>
+                                    {% endfor %}
+                                    </select></pre>
+                <pre>Fecha Nac.:    <input type="date" name="fecha_nacimiento" value="{{ alumno.fecha_nacimiento|date:'Y-m-d' }}"></pre>
+                <pre>Género:        <select name="genero">
+                                    {% for genero in generos %}
+                                        <option value="{{ genero.id_genero }}" {% if genero.id_genero == alumno.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
+                                    {% endfor %}
+                                    </select></pre>
+                <pre>Teléfono:      <input type="text" name="telefono" value="{{ alumno.telefono }}"></pre>
+                <pre>Email:         <input type="email" name="correo_electronico" value="{{ alumno.correo_electronico }}"></pre>
+                <pre>Dirección:     <input type="text" name="direccion" value="{{ alumno.direccion }}"></pre>
+                <input type="submit" value="Actualizar">
+            </form> <br><br>
+        {% endif %}
+        <div id="idMensajes">
+            {% if mensaje %}
+                {{ mensaje }}
+            {% endif %}
+        </div>
+        <br><br>
+        <a href="{% url 'crud' %}"> Volver </a>
+    </div>
+</body>
+</html>

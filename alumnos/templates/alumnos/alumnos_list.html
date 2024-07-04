@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Alumnos</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Alumnos</h1>
+    <div id="idMensajes">
+        {% if mensaje %}
+            <div>{{ mensaje }}</div>
+        {% endif %}
+    </div>
+    <button type="button">
+        <a href="{% url 'alumnos_Add' %}">Agregar</a>
+    </button>
+    <table>
+        {% if alumnos %}
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>RUT</th>
+                    <th>Nivel de Educación</th>
+                    <th>Dirección</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Correo Electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Género</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alumno in alumnos %}
+                    <tr>
+                        <td>{{ alumno.nombre }}</td>
+                        <td>{{ alumno.rut }}</td>
+                        <td>{{ alumno.get_nivel_educacion_display }}</td>
+                        <td>{{ alumno.direccion }}</td>
+                        <td>{{ alumno.fecha_nacimiento }}</td>
+                        <td>{{ alumno.correo_electronico }}</td>
+                        <td>{{ alumno.telefono }}</td>
+                        <td>{{ alumno.genero.descripcion }}</td>
+                        <td>
+                            <a href="{% url 'alumnos_del' pk=alumno.id_alumno %}">Eliminar</a>
+                            <a href="{% url 'alumnos_findEdit' pk=alumno.id_alumno %}">Modificar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
+    </table>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#idMensajes").delay(2000).fadeOut("slow");
+        });
+    </script>
+</body>
+</html>
