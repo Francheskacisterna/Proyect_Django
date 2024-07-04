@@ -1,0 +1,205 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'admin_portal/img/Logo.png' %}">
+    <!-- Bootstrap CSS (librerías) -->
+    <title>LBWUS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Style/estilo.css' %}">
+</head>
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand me-auto" href="#">
+                <img src="{% static 'img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
+                LBWUS
+            </a>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'planes' %}">Clases</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'servicios' %}">Solicitudes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'nosotros' %}">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'contactos' %}">Contactos</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4">
+                                {% if user.is_authenticated %}
+                                    {{ user.username }}
+                                {% else %}
+                                    login
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
+                                {% if user.is_authenticated %}
+                                    <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
+                                {% else %}
+                                    <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+                                {% endif %}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="registrarse-button btn btn-primary">Registrarse</a>
+                <a href="{% url 'login' %}" class="login-button btn btn-secondary">Iniciar</a>
+            {% endif %}
+            <!-- Botón para cambiar el tema con iconos -->
+            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                <i class="bi bi-sun"></i>  <!-- Icono predeterminado para el tema claro -->
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <!--End Navbar-->
+    <!--Carrusel-->
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="5000">
+                <img src="{% static 'img/prueba112.png' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>Bienvenido a LBWUS</h5>
+                    <p> Apoyado por un equipo de profesionales experimentados, <br> aquí es donde tus desafíos se
+                        transforman en victorias.<br><br>
+                    </p>
+                    <a href="{% url 'servicios' %}" class="btn btn-warning mt3"> Conocer más </a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'img/prueba013.png' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>Conoce nuestros planes</h5>
+                    <p> Si estás interesado no esperes más ve el plan que más <br> se adecue a tus necesidades <br><br>
+                    </p>
+                    <a href="{% url 'planes' %}" class="btn btn-warning mt3"> Conocer más </a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'img/prueba17.png' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>¿Quienes somos?</h5>
+                    <p> Estás interesado en conocernos un poco más <br><br> </p>
+                    <a href="{% url 'nosotros' %}" class="btn btn-warning mt3"> Pincha aquí </a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- fin del carrusel-->
+    <!--Inicio Footer-->
+    <footer class="footer">
+        <div class="container container-footer">
+            <div class="menu-footer">
+                <div class="contact-info">
+                    <p class="title-footer">Información de Contacto</p>
+                    <ul>
+                        <li class="infocontact">
+                            Dirección: Pacifico Norte 123 <br> Vernon Rockville, CT 06066
+                        </li>
+                        <li>Teléfono: 123-456-7890</li>
+                        <li>Email: teachers@lbwus.cl</li>
+                    </ul>
+                    <div class="social-icons">
+                        <span class="facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </span>
+                        <span class="twitter">
+                            <i class="fa-brands fa-twitter"></i>
+                        </span>
+                        <span class="youtube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </span>
+                        <span class="pinterest">
+                            <i class="fa-brands fa-pinterest-p"></i>
+                        </span>
+                        <span class="instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="information">
+                    <p class="title-footer">Información</p>
+                    <ul class="infofo">
+                        <li><a href="#">Acerca de Nosotros</a></li>
+                        <li><a href="#">Estado de tus contrataciones</a></li>
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="my-account">
+                    <p class="title-footer">Mi cuenta</p>
+                    <ul class="mi-cuenta">
+                        <li><a href="#">Mi cuenta</a></li>
+                        <li><a href="#">Historial de órdenes</a></li>
+                        <li><a href="#">Lista de deseos</a></li>
+                        <li><a href="#">Boletín</a></li>
+                        <li><a href="#">Reembolsos</a></li>
+                    </ul>
+                </div>
+                <div class="newsletter">
+                    <p class="title-footer">Boletín informativo</p>
+                    <div class="content">
+                        <p>
+                            Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas exclusivas.
+                        </p>
+                        <input type="email" placeholder="Ingresa el correo aquí...">
+                        <button>Suscríbete</button>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>
+                    Desarrollando enseñanza para el mundo &copy; 2024
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!--Fin Footer-->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'java/main.js' %}"></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+</body>
+</html>
