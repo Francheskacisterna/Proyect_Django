@@ -29,7 +29,6 @@ def simulador(request):
     context = {}
     return render(request, 'alumnos/simulador.html', context)
 
-
 def opcion_user(request):
     context = {}
     return render(request, 'alumnos/opcion_user.html', context)
@@ -53,85 +52,74 @@ def crud(request):
     return render(request, 'alumnos/alumnos_list.html', context)
 
 def alumnos_Add(request):
-    if request.method == "POST":
-        genero_id = request.POST.get('genero')
-        if not genero_id:
-            return HttpResponse("Error: Género no seleccionado", status=400)
-        
-        try:
-            objGenero = Genero.objects.get(id_genero=genero_id)
-            Alumno.objects.create(
-                nombre=request.POST.get('nombre'),
-                rut=request.POST.get('rut'),
-                nivel_educacion=request.POST.get('nivel_educacion'),
-                direccion=request.POST.get('direccion'),
-                fecha_nacimiento=request.POST.get('fecha_nacimiento'),
-                correo_electronico=request.POST.get('correo_electronico'),
-                telefono=request.POST.get('telefono'),
-                genero=objGenero,
-            )
-            return redirect('crud')
-        except Genero.DoesNotExist:
-            return HttpResponse("Género no encontrado", status=404)
-    else:
-        generos = Genero.objects.all()
-        return render(request, 'alumnos/alumnos_add.html', {'generos': generos})
-        
-def alumnos_del(request, pk):
-    try:
-        alumno = Alumno.objects.get(id_alumno=pk)
-        alumno.delete()
-        mensaje = "Bien, datos eliminados..."
-    except Alumno.DoesNotExist:
-        mensaje = "Error, alumno no existe..."
-    alumnos = Alumno.objects.all()
-    context = {'alumnos': alumnos, 'mensaje': mensaje}
-    return render(request, 'alumnos/alumnos_list.html', context)
+    if request.method == 'POST':
+        nombre = request.POST['nombre']
+        rut = request.POST['rut']
+        nivel_educacion = request.POST['nivel_educacion']
+        direccion = request.POST['direccion']
+        fecha_nacimiento = request.POST['fecha_nacimiento']
+        correo_electronico = request.POST['correo_electronico']
+        telefono = request.POST['telefono']
+        genero_id = request.POST['genero']
 
-def alumnos_findEdit(request, pk):
-    try:
-        alumno = Alumno.objects.get(id_alumno=pk)
-        generos = Genero.objects.all()
-        context = {'alumno': alumno, 'generos': generos}
-        return render(request, 'alumnos/alumnos_edit.html', context)
-    except Alumno.DoesNotExist:
-        context = {'mensaje': "Error, alumno no existe..."}
-        return render(request, 'alumnos/alumnos_list.html', context)
+        genero = Genero.objects.get(id_genero=genero_id)
+
+        alumno = Alumno(
+            nombre=nombre,
+            rut=rut,
+            nivel_educacion=nivel_educacion,
+            direccion=direccion,
+            fecha_nacimiento=fecha_nacimiento,
+            correo_electronico=correo_electronico,
+            telefono=telefono,
+            genero=genero
+        )
+        alumno.save()
+        return redirect('alumnos/alumnos_list')
+
+    generos = Genero.objects.all()
+    return render(request, 'alumnos/alumnos_add.html', {'generos': generos})
+
+def alumnos_findEdit(request, id):
+    alumno = get_object_or_404(Alumno, id_alumno=id)
+    if request.method == 'POST':
+        alumno.nombre = request.POST['nombre']
+        alumno.rut = request.POST['rut']
+        alumno.nivel_educacion = request.POST['nivel_educacion']
+        alumno.direccion = request.POST['direccion']
+        alumno.fecha_nacimiento = request.POST['fecha_nacimiento']
+        alumno.correo_electronico = request.POST['correo_electronico']
+        alumno.telefono = request.POST['telefono']
+        alumno.genero_id = request.POST['genero']
+        alumno.save()
+        return redirect('alumnos/alumnos_list.html')
+    
+    generos = Genero.objects.all()
+    return render(request, 'alumnos/alumnos_edit.html', {'alumno': alumno, 'generos': generos})
+
+def alumnos_del(request, id):
+    alumno = get_object_or_404(Alumno, id_alumno=id)
+    alumno.delete()
+    return redirect('alumnos/alumnos_list.html')
+
 
 def alumnos_Update(request):
-    if request.method == "POST":
-        id_alumno = request.POST["id_alumno"]
-        rut = request.POST["rut"]
-        nombre = request.POST["nombre"]
-        nivel_educacion = request.POST["nivel_educacion"]
-        direccion = request.POST["direccion"]
-        fecha_nacimiento = request.POST["fecha_nacimiento"]
-        correo_electronico = request.POST["correo_electronico"]
-        telefono = request.POST["telefono"]
-        genero = request.POST["genero"]
+    if request.method == 'POST':
+        id_alumno = request.POST.get('id_alumno')
+        alumno = get_object_or_404(Alumno, id_alumno=id_alumno)
 
-        try:
-            objGenero = Genero.objects.get(id_genero=genero)
-            alumno = Alumno.objects.get(id_alumno=id_alumno)
-            alumno.rut = rut
-            alumno.nombre = nombre
-            alumno.nivel_educacion = nivel_educacion
-            alumno.direccion = direccion
-            alumno.fecha_nacimiento = fecha_nacimiento
-            alumno.correo_electronico = correo_electronico
-            alumno.telefono = telefono
-            alumno.genero = objGenero
-            alumno.save()
-            mensaje = "Ok, datos actualizados..."
-        except Genero.DoesNotExist:
-            mensaje = "Error, género no existe..."
-        except Alumno.DoesNotExist:
-            mensaje = "Error, alumno no existe..."
+        alumno.nombre = request.POST.get('nombre')
+        alumno.rut = request.POST.get('rut')
+        alumno.nivel_educacion = request.POST.get('nivel_educacion')
+        alumno.direccion = request.POST.get('direccion')
+        alumno.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        alumno.correo_electronico = request.POST.get('correo_electronico')
+        alumno.telefono = request.POST.get('telefono')
+        genero_id = request.POST.get('genero')
+        alumno.genero = Genero.objects.get(id_genero=genero_id)
 
-        generos = Genero.objects.all()
-        context = {'mensaje': mensaje, 'generos': generos, 'alumno': alumno}
-        return render(request, 'alumnos/alumnos_edit.html', context)
+        alumno.save()
+        return HttpResponse("OK, datos actualizados.")  # Confirmación simple en lugar de redirección
     else:
-        alumnos = Alumno.objects.all()
-        context = {'alumnos': alumnos}
-        return render(request, 'alumnos/alumnos_list.html', context)
+        return HttpResponse("Solicitud inválida.", status=400)
+

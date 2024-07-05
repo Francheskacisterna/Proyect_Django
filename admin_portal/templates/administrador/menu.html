@@ -5,19 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'admin_portal/img/Logo.png' %}">
-    <!-- Bootstrap CSS (librerías) -->
+    <link rel="icon" href="{% static 'alumnos/img/Logo.png' %}">
+    <!-- Bootstrap CSS (librerias)-->
     <title>LBWUS</title>
+    {% load static %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'Style/estilo.css' %}">
+    <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
+    <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
+    
 </head>
 <body>
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
                 LBWUS
             </a>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -88,7 +91,7 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="5000">
-                <img src="{% static 'img/prueba112.png' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'alumnos/img/prueba112.png' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption">
                     <h5>Bienvenido a LBWUS</h5>
                     <p> Apoyado por un equipo de profesionales experimentados, <br> aquí es donde tus desafíos se
@@ -98,7 +101,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{% static 'img/prueba013.png' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'alumnos/img/prueba013.png' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption">
                     <h5>Conoce nuestros planes</h5>
                     <p> Si estás interesado no esperes más ve el plan que más <br> se adecue a tus necesidades <br><br>
@@ -107,7 +110,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{% static 'img/prueba17.png' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'alumnos/img/prueba17.png' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption">
                     <h5>¿Quienes somos?</h5>
                     <p> Estás interesado en conocernos un poco más <br><br> </p>

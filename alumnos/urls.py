@@ -17,5 +17,5 @@ urlpatterns = [
     path('alumnos/alumnos_Add', alumnos_Add, name='alumnos_Add'),
     path('alumnos/alumnos_del', alumnos_del, name='alumnos_del'),
     path('alumnos/alumnos_finEdit/str:pk', alumnos_findEdit, name='alumnos_findEdit'),
-    path('alumnos/alumnos_Update', alumnos_Update, name='alumnos_Update'),
+    path('alumnos/alumnos_Update', alumnos_Update, name='alumnos_Update')
 ]
