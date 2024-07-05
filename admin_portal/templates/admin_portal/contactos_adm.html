@@ -1,7 +1,8 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,29 +15,33 @@
     <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
 
-        th,
-        td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
+<style>
+    .section-fullscreen {
+        min-height: 100vh;
+        /* Esto asegura que la sección tenga al menos el alto de la pantalla */
+        display: flex;
+        align-items: center;
+        /* Centra el contenido verticalmente */
+        justify-content: center;
+        /* Centra el contenido horizontalmente */
+    }
+
+    .about-img {
+        max-width: 50%;
+        /* Ajusta esto según necesites */
+    }
+
+    @media (max-width: 768px) {
+        .about-img {
+            max-width: 100%;
+            margin-bottom: 20px;
+            /* Espacio entre la imagen y el texto en dispositivos móviles */
+        }
+    }
+</style>
 
 <body>
     <!--Navbar-->
@@ -106,50 +111,82 @@
                 </div>
     </nav>
     <!--End Navbar-->
-    <h1>Lista de Alumnos</h1>
-    <div id="idMensajes">
-        {% if mensaje %}
-        <div>{{ mensaje }}</div>
-        {% endif %}
+    <div class="container my-5">
+        <!-- Sección de contacto -->
+        <div class="row">
+            <!-- Información de contacto -->
+            <div class="col-md-6">
+                <div class="info-form" style="padding-top: 30px;">
+                    <h2>Contáctanos</h2>
+                    <p>Recuerda que siempre cuentas con nuestro apoyo. Contáctanos y nos informas sobre las dudas que
+                        puedas tener con respecto a nuestros servicios.</p>
+                    <div class="mb-3">
+                        <a href="tel:123456789" class="d-block">
+                            <i class="fa fa-phone"></i> 123-456-789
+                        </a>
+                        <a href="mailto:teachers@lbwus.cl" class="d-block">
+                            <i class="fa fa-envelope"></i> teachers@lbwus.cl
+                        </a>
+                        <a href="#" class="d-block">
+                            <i class="fa fa-map-marker"></i> Santiago, Chile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de contacto -->
+            <div class="col-md-6">
+                <div class="info-form" style="padding-top: 30px;">
+                    <form id="contact-form" action="#" method="post" autocomplete="off" class="needs-validation"
+                        novalidate>
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                placeholder="Ingresa tu nombre" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa tu nombre.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email-contact" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email-contact" name="email"
+                                placeholder="Ingresa tu correo" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un correo electrónico válido.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mensaje" class="form-label">Mensaje</label>
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="3"
+                                placeholder="Ingresa tu mensaje" required></textarea>
+                            <div class="invalid-feedback">
+                                Por favor ingresa tu mensaje.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-ms">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="button">
-        <a href="{% url 'alumnos_Add' %}">Agregar</a>
-    </button>
-    <table>
-        {% if alumnos %}
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>RUT</th>
-                <th>Nivel de Educación</th>
-                <th>Dirección</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Correo Electrónico</th>
-                <th>Teléfono</th>
-                <th>Género</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for alumno in alumnos %}
-            <tr>
-                <td>{{ alumno.nombre }}</td>
-                <td>{{ alumno.rut }}</td>
-                <td>{{ alumno.get_nivel_educacion_display }}</td>
-                <td>{{ alumno.direccion }}</td>
-                <td>{{ alumno.fecha_nacimiento }}</td>
-                <td>{{ alumno.correo_electronico }}</td>
-                <td>{{ alumno.telefono }}</td>
-                <td>{{ alumno.genero.descripcion }}</td>
-                <td>
-                    <a href="{% url 'alumnos_del' pk=alumno.id_alumno%}">Eliminar</a>
-                    <a href="{% url 'alumnos_findEdit' pk=alumno.id_alumno%}">Modificar</a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        {% endif %}
-    </table>
+    <!-- Caricaturas -->
+    <section class="about-services">
+        <div class="contenedor">
+            <div class="servicio-cont">
+                <div class="servicio-ind">
+                    <img src="{% static 'alumnos/img/ilustracion4.png' %}" alt="">
+                </div>
+                <div class="servicio-ind">
+                    <img src="{% static 'alumnos/img/ilustracion1.png' %}" alt="">
+                </div>
+                <div class="servicio-ind">
+                    <img src="{% static 'alumnos/img/ilustracion3.jpeg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Fin Caricaturas -->
+
     <!--Inicio Footer-->
     <footer class="footer">
         <div class="container container-footer">
@@ -220,18 +257,12 @@
             </div>
         </div>
     </footer>
+
     <!--Fin Footer-->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'java/main.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#idMensajes").delay(2000).fadeOut("slow");
-        });
-    </script>
 </body>
 
 </html>

@@ -16,13 +16,13 @@
                 <pre>Nombre:        <input type="text" name="nombre" value="{{ alumno.nombre }}"></pre>
                 <pre>Nivel Educación:<select name="nivel_educacion">
                                     {% for choice in Alumno.NIVEL_EDUCACION_CHOICES %}
-                                        <option value="{{ choice.0 }}" {% if choice.0 == alumno.nivel_educacion %}selected{% endif %}>{{ choice.1 }}</option>
+                                        <option value="{{ choice.0 }}" {% if choice.0 = alumno.nivel_educacion %}selected{% endif %}>{{ choice.1 }}</option>
                                     {% endfor %}
                                     </select></pre>
                 <pre>Fecha Nac.:    <input type="date" name="fecha_nacimiento" value="{{ alumno.fecha_nacimiento|date:'Y-m-d' }}"></pre>
                 <pre>Género:        <select name="genero">
                                     {% for genero in generos %}
-                                        <option value="{{ genero.id_genero }}" {% if genero.id_genero == alumno.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
+                                        <option value="{{ genero.id_genero }}" {% if genero.id_genero = alumno.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
                                     {% endfor %}
                                     </select></pre>
                 <pre>Teléfono:      <input type="text" name="telefono" value="{{ alumno.telefono }}"></pre>

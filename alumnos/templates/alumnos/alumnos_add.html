@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
-    
+
 </head>
 <style>
     body {
@@ -22,9 +23,9 @@
     }
 
     .bg {
-        background-image: url("{% static 'alumnos/img/prueb1.jpeg' %}" );
+        background-image: url("{% static 'alumnos/img/prueb1.jpeg' %}");
         background-position: center center;
-        
+
     }
 
     .container-login-custom-new {
@@ -36,18 +37,21 @@
         /* Para compensar la barra de navegación fija */
         padding-bottom: 50px;
 
-        
+
     }
 </style>
+
 <body>
-      <!--Navbar-->
-      <nav class="navbar navbar-expand-lg fixed-top">
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
                 {% load static %}
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">                
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
+                    class="d-inline-block align-text-top">
                 LBWUS</a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -68,108 +72,136 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'contactos' %}">Contactos</a>
-                        </li>                        
+                        </li>
                     </ul>
                 </div>
             </div>
             <a href="" class="registrarse-button btn btn-primary">Registrarse</a>
-            <a href="{% url 'opcion_user' %}"class="login-button btn btn-secondary">Iniciar</a>
+            <a href="{% url 'opcion_user' %}" class="login-button btn btn-secondary">Iniciar</a>
             <!-- Botón para cambiar el tema con iconos -->
             <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                <i class="bi bi-sun"></i>  <!-- Icono predeterminado para el tema claro -->
+                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
             </button>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-    </nav>    
-<!--End Navbar-->
-<div class="container w-75 bg-primary mt-4 rounded shadow">
-    <div class="row align-items-stretch">
-        <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
-        <div class="col bg-white p-5 rounded-end">
-            <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
-            <!-- Formulario de registro de alumno -->
-            <form action="{% url 'alumnos_Add' %}" method="POST" class="needs-validation d-flex flex-column align-items-center" novalidate>
-                {% csrf_token %}
-                <!-- Campos personalizados para el registro de alumno -->
-                <div class="mb-4 w-100">
-                    <label for="rut" class="form-label">RUT</label>
-                    <input type="text" class="form-control" id="rut" name="rut" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa el RUT del alumno.
+    </nav>
+    <!--End Navbar-->
+    <div class="container w-75 bg-primary mt-4 rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+            <div class="col bg-white p-5 rounded-end">
+                <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
+                <!-- Formulario de registro de alumno -->
+                <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST">
+                    {% csrf_token %}
+                    <!-- Campos personalizados para el registro de alumno -->
+                    <div class="mb-4 w-100">
+                        <label for="rut" class="form-label">RUT</label>
+                        <input type="text" class="form-control" id="rut" name="rut" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa el RUT del alumno.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="nombre" class="form-label">Nombre Completo</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa el nombre completo.
+                    <div class="mb-4 w-100">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa el nombre completo.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="direccion" class="form-label">Dirección</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa la dirección.
+                    <div class="mb-4 w-100">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa la dirección.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                    <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa la fecha de nacimiento.
+                    <div class="mb-4 w-100">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa la fecha de nacimiento.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="correo_electronico" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa un correo electrónico válido.
+                    <div class="mb-4 w-100">
+                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" name="correo_electronico" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un correo electrónico válido.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="telefono" class="form-label">Teléfono</label>
-                    <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
-                    <div class="invalid-feedback">
-                        Por favor ingresa un número de teléfono válido.
+                    <div class="mb-4 w-100">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}"
+                            required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un número de teléfono válido.
+                        </div>
                     </div>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
-                    <select class="form-control" id="nivel_educacion" name="nivel_educacion">
-                        <option value="basica">Básica</option>
-                        <option value="media">Media</option>
-                        <option value="superior">Superior</option>
-                    </select>
-                </div>
-                <div class="mb-4 w-100">
-                    <label for="genero" class="form-label">Género</label>
-                    <select class="form-control" id="genero" name="genero">
-                        {% for genero in generos %}
+                    <div class="mb-4 w-100">
+                        <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
+                        <select class="form-control" id="nivel_educacion" name="nivel_educacion">
+                            <option value="basica">Básica</option>
+                            <option value="media">Media</option>
+                            <option value="superior">Superior</option>
+                        </select>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="genero" class="form-label">Género</label>
+                        <select class="form-control" id="genero" name="genero">
+                            {% for genero in generos %}
                             <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                        {% endfor %}
-                    </select>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Botón de enviar -->
+                    <div class="d-grid w-100">
+                        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                    </div>
+                </form>
+                <!-- Enlace para iniciar sesión si ya tiene cuenta -->
+                <div class="my-3 text-center w-100">
+                    <span>¿Ya tienes cuenta? <a href="{% url 'home' %}">Inicia sesión aquí</a></span>
                 </div>
-                <!-- Botón de enviar -->
-                <div class="d-grid w-100">
-                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-                </div>
-            </form>
-            <!-- Enlace para iniciar sesión si ya tiene cuenta -->
-            <div class="my-3 text-center w-100">
-                <span>¿Ya tienes cuenta? <a href="{% url 'home' %}">Inicia sesión aquí</a></span>
             </div>
         </div>
     </div>
-</div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
-    <script
-	src="https://kit.fontawesome.com/81581fb069.js"
-	crossorigin="anonymous"
-	></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('formAlumnosAdd').addEventListener('submit', function (event) {
+            event.preventDefault();  // Evitar el envío normal del formulario
+            var formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Respuesta del Servidor',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema con la petición',
+                        icon: 'error'
+                    });
+                });
+        });
+    </script>
+    </script>
 </body>
+
 </html>

@@ -1,12 +1,11 @@
 from django.urls import path
-from .views import menu, reporte_alumnos, home
-from django.contrib.auth import views as auth_views
-
+from .views import menu, reporte_alumnos, home_adm, planes_adm, nosotros_adm, contactos_adm
 
 urlpatterns = [
     path('menu', menu, name='menu'),
     path('reporte_alumnos', reporte_alumnos, name='reporte_alumnos'),
-    path('home', home, name='home'),
-        path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('home_adm', home_adm, name='home_adm'),
+    path('planes_adm', planes_adm, name='planes_adm'),
+    path('nosotros_adm', nosotros_adm, name='nosotros_adm'),
+    path('contactos_adm', contactos_adm, name='contactos_adm'),
 ]

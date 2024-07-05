@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import JsonResponse
 from .models import Alumno, Genero, Tutor
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -53,54 +53,56 @@ def crud(request):
 
 def alumnos_Add(request):
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        rut = request.POST['rut']
-        nivel_educacion = request.POST['nivel_educacion']
-        direccion = request.POST['direccion']
-        fecha_nacimiento = request.POST['fecha_nacimiento']
-        correo_electronico = request.POST['correo_electronico']
-        telefono = request.POST['telefono']
-        genero_id = request.POST['genero']
+        try:
+            nombre = request.POST['nombre']
+            rut = request.POST['rut']
+            nivel_educacion = request.POST['nivel_educacion']
+            direccion = request.POST['direccion']
+            fecha_nacimiento = request.POST['fecha_nacimiento']
+            correo_electronico = request.POST['correo_electronico']
+            telefono = request.POST['telefono']
+            genero_id = request.POST['genero']
 
-        genero = Genero.objects.get(id_genero=genero_id)
+            genero = Genero.objects.get(id_genero=genero_id)
 
-        alumno = Alumno(
-            nombre=nombre,
-            rut=rut,
-            nivel_educacion=nivel_educacion,
-            direccion=direccion,
-            fecha_nacimiento=fecha_nacimiento,
-            correo_electronico=correo_electronico,
-            telefono=telefono,
-            genero=genero
-        )
-        alumno.save()
-        return redirect('alumnos/alumnos_list')
+            Alumno.objects.create(
+                nombre=nombre,
+                rut=rut,
+                nivel_educacion=nivel_educacion,
+                direccion=direccion,
+                fecha_nacimiento=fecha_nacimiento,
+                correo_electronico=correo_electronico,
+                telefono=telefono,
+                genero=genero
+            )
+            return JsonResponse({"success": True, "message": "Alumno registrado exitosamente."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
 
     generos = Genero.objects.all()
     return render(request, 'alumnos/alumnos_add.html', {'generos': generos})
 
-def alumnos_findEdit(request, id):
-    alumno = get_object_or_404(Alumno, id_alumno=id)
-    if request.method == 'POST':
-        alumno.nombre = request.POST['nombre']
-        alumno.rut = request.POST['rut']
-        alumno.nivel_educacion = request.POST['nivel_educacion']
-        alumno.direccion = request.POST['direccion']
-        alumno.fecha_nacimiento = request.POST['fecha_nacimiento']
-        alumno.correo_electronico = request.POST['correo_electronico']
-        alumno.telefono = request.POST['telefono']
-        alumno.genero_id = request.POST['genero']
-        alumno.save()
-        return redirect('alumnos/alumnos_list.html')
-    
-    generos = Genero.objects.all()
-    return render(request, 'alumnos/alumnos_edit.html', {'alumno': alumno, 'generos': generos})
+def alumnos_findEdit(request, pk):
+    try:
+        alumno = Alumno.objects.get(id_alumno=pk)  # Usamos id_alumno en lugar de rut
+        generos = Genero.objects.all()
+        context = {'alumno': alumno, 'generos': generos}
+        return render(request, 'alumnos/alumnos_edit.html', context)
+    except Alumno.DoesNotExist:
+        context = {'mensaje': "Error, ID no existe..."}
+        return render(request, 'alumnos/alumnos_list.html', context)
 
-def alumnos_del(request, id):
-    alumno = get_object_or_404(Alumno, id_alumno=id)
-    alumno.delete()
-    return redirect('alumnos/alumnos_list.html')
+
+def alumnos_del(request, pk):
+    try:
+        alumno = Alumno.objects.get(id_alumno=pk)  # Usamos id_alumno en lugar de rut
+        alumno.delete()
+        mensaje = "Bien, datos eliminados..."
+    except Alumno.DoesNotExist:
+        mensaje = "Error, ID no existe..."
+    alumnos = Alumno.objects.all()
+    context = {'alumnos': alumnos, 'mensaje': mensaje}
+    return render(request, 'alumnos/alumnos_list.html', context)
 
 
 def alumnos_Update(request):
@@ -122,4 +124,39 @@ def alumnos_Update(request):
         return HttpResponse("OK, datos actualizados.")  # Confirmación simple en lugar de redirección
     else:
         return HttpResponse("Solicitud inválida.", status=400)
+
+
+def alumnos_reg(request):
+    if request.method == 'POST':
+        try:
+            nombre = request.POST['nombre']
+            rut = request.POST['rut']
+            nivel_educacion = request.POST['nivel_educacion']
+            direccion = request.POST['direccion']
+            fecha_nacimiento = request.POST['fecha_nacimiento']
+            correo_electronico = request.POST['correo_electronico']
+            telefono = request.POST['telefono']
+            genero_id = request.POST['genero']
+
+            genero = Genero.objects.get(id_genero=genero_id)
+
+            Alumno.objects.create(
+                nombre=nombre,
+                rut=rut,
+                nivel_educacion=nivel_educacion,
+                direccion=direccion,
+                fecha_nacimiento=fecha_nacimiento,
+                correo_electronico=correo_electronico,
+                telefono=telefono,
+                genero=genero
+            )
+            return JsonResponse({"success": True, "message": "Alumno registrado exitosamente."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+
+    generos = Genero.objects.all()
+    return render(request, 'alumnos/regis_alum.html', {'generos': generos})
+
+
+
 
