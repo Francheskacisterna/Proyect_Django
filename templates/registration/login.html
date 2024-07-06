@@ -4,14 +4,58 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Iniciar sesión</title>
+    <style>
+        body {
+            background-color: #f0f0f0; /* Color de fondo para toda la página */
+            display: flex;
+            justify-content: center; /* Centra horizontalmente el contenido */
+            align-items: center; /* Centra verticalmente el contenido */
+            height: 100vh; /* Utiliza toda la altura visible del viewport */
+            margin: 0;
+            font-family: Arial, sans-serif; /* Fuente para todo el documento */
+        }
+
+        .login-container {
+            background-color: #ffffff; /* Fondo blanco del contenedor del formulario */
+            padding: 20px;
+            border-radius: 8px; /* Bordes redondeados del contenedor */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera para efecto de elevación */
+            width: 300px; /* Ancho del contenedor del formulario */
+            text-align: center; /* Centra el contenido del contenedor */
+        }
+
+        h2 {
+            color: #333333; /* Color del título */
+        }
+
+        form {
+            margin-top: 20px; /* Espacio superior entre el título y el formulario */
+        }
+
+        button {
+            background-color: #4CAF50; /* Color de fondo del botón */
+            color: white; /* Color del texto del botón */
+            padding: 10px 20px; /* Espacio interno del botón */
+            border: none; /* Sin borde */
+            cursor: pointer; /* Cursor tipo puntero al pasar sobre el botón */
+            border-radius: 4px; /* Bordes redondeados del botón */
+            font-size: 16px; /* Tamaño del texto del botón */
+        }
+
+        button:hover {
+            background-color: #45a049; /* Color de fondo del botón al pasar el ratón */
+        }
+    </style>
 </head>
 <body>
-    <h2>Log In</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Log In</button>
-    </form>
+    <div class="login-container">
+        <h2>Iniciar sesión</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
 </body>
 </html>
