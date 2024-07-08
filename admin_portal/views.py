@@ -9,8 +9,7 @@ def menu(request):
     usuario = request.session["usuario"]
     context = {'usuario': usuario}
     return render(request, 'admin_portal/menu.html', context)
-    
-@login_required
+
 def home_adm(request):
     context = {}
     return render(request, 'admin_portal/home_adm.html', context)

@@ -17,9 +17,17 @@ urlpatterns = [
 
     path('alumnos/crud/', crud, name='crud'),
     path('alumnos/alumnos_Add', alumnos_Add, name='alumnos_Add'),
-    path('alumnos/alumnos_del/str:pk/', alumnos_del, name='alumnos_del'),
+    path('alumnos/alumnos_del/<str:pk>/', alumnos_del, name='alumnos_del'),
     path('alumnos/alumnos_findEdit/<str:pk>/', alumnos_findEdit, name='alumnos_findEdit'),
     path('alumnos/alumnos_Update', alumnos_Update, name='alumnos_Update'),
     path('alumnos/alumnos_reg', alumnos_reg, name='alumnos_reg'),
+
+    path('profesores/', crud_profesores, name='profesores_list')
+    path('profesores/add/', profesores_Add, name='profesores_Add'),
+    path('profesores/del/<str:pk>/', profesor_del, name='profesor_del'),
+    path('profesores/edit/<str:pk>', profesores_findEdit, name='profesor_findEdit'),
+    path('profesores/update/', profesorUpdate, name='profesorUpdate'),
+
+    path('listacli/', lista_combinada, name='lista_combinada'),
 
 ]
