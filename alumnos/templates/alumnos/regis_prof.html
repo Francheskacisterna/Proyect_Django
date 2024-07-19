@@ -15,10 +15,46 @@
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
     
 </head>
+<style>
+    body {
+        background: #a159d8;
+        background: linear-gradient(to right, #ff96ca, #c2b6f3);
+    }
 
+    .bg {
+        background-image: url("{% static 'alumnos/img/img7.jpeg' %}");
+        background-position: center center;
+
+    }
+
+    .container-login-custom-new {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding-top: 80px;
+        /* Para compensar la barra de navegación fija */
+        padding-bottom: 50px;
+
+
+    }
+</style>
 <body>
+    {% if messages %}
+    {% for m in messages %}
+    <script>
+        Swal.fire({
+            "title": "Exitoso",
+            "text": "{{m}}",
+            "icon": "success"
+        })
+    </script>
+
+    {% endfor %}
+
+    {% endif %}
       <!--Navbar-->
-      <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
                 {% load static %}
@@ -60,9 +96,104 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-    </nav>    
-<!--End Navbar-->
-
+    </nav>
+    <div class="container w-75 bg-primary mt-4 rounded shadow">
+        <div class="row align-items-stretch">
+            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+            <div class="col bg-white p-5 rounded-end">
+                <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
+                <form id="formProfreg" action="{% url 'profesor_Add' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4 w-100">
+                        <label for="rut" class="form-label">RUT</label>
+                        <input type="text" class="form-control" id="rut" name="rut" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa el RUT del Profesor.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa el nombre completo.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa la dirección.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa la fecha de nacimiento.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un correo electrónico válido.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="username" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un nombre de usuario.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa una contraseña.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un número de teléfono válido.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
+                        <select class="form-control" id="nivel_educacion" name="nivel_educacion">
+                            <option value="basica">Básica</option>
+                            <option value="media">Media</option>
+                            <option value="superior">Superior</option>
+                        </select>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="genero" class="form-label">Género</label>
+                        <select class="form-control" id="genero" name="genero">
+                            {% for genero in generos %}
+                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="especialidad" class="form-label">Especialidad</label>
+                        <select class="form-control" id="especialidad" name="especialidad">
+                            {% for especialidad in especialidades %}
+                            <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-grid w-100">
+                        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                    </div>
+                </form>
+                <div class="my-3 text-center w-100">
+                    <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'alumnos/java/main.js' %}"></script>

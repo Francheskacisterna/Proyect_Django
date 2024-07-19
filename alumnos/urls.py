@@ -1,6 +1,6 @@
 #from django.conf.urls import url
 from django.urls import path
-from .views import home, contactos, nosotros, planes, servicios, simulador, opcion_user, regis_prof, regis_alum, regis_tutor, crud, alumnos_Add, alumnos_del, alumnos_findEdit, alumnos_Update, alumnos_reg
+from .views import home, contactos, nosotros, planes, servicios, simulador, opcion_user, regis_prof, regis_alum, regis_tutor, crud, alumnos_Add, alumnos_del, alumnos_findEdit, alumnos_Update, alumnos_reg, crud_profesor, profesor_Add, profesor_del, profesor_findEdit, profesorUpdate, lista_combinada, dashboard
 
 urlpatterns = [
     path('', home, name='home'),
@@ -14,7 +14,6 @@ urlpatterns = [
     path('alumnos/registro_tutor', regis_tutor, name='regis_tutor'),
     path('alumnos/registro_alumno', regis_alum, name='regis_alum'),
 
-
     path('alumnos/crud/', crud, name='crud'),
     path('alumnos/alumnos_Add', alumnos_Add, name='alumnos_Add'),
     path('alumnos/alumnos_del/<str:pk>/', alumnos_del, name='alumnos_del'),
@@ -22,12 +21,12 @@ urlpatterns = [
     path('alumnos/alumnos_Update', alumnos_Update, name='alumnos_Update'),
     path('alumnos/alumnos_reg', alumnos_reg, name='alumnos_reg'),
 
-    path('profesores/', crud_profesores, name='profesores_list')
-    path('profesores/add/', profesores_Add, name='profesores_Add'),
-    path('profesores/del/<str:pk>/', profesor_del, name='profesor_del'),
-    path('profesores/edit/<str:pk>', profesores_findEdit, name='profesor_findEdit'),
-    path('profesores/update/', profesorUpdate, name='profesorUpdate'),
+    path('profesor/crud', crud_profesor, name='crud_profesores'),
+    path('profesor/add/', profesor_Add, name='profesor_Add'),
+    path('profesor/del/<str:pk>/', profesor_del, name='profesor_del'),
+    path('profesor/edit/<str:pk>', profesor_findEdit, name='profesor_findEdit'),
+    path('profesor/update/', profesorUpdate, name='profesorUpdate'),
 
     path('listacli/', lista_combinada, name='lista_combinada'),
-
+    path('dashboard/', dashboard, name='dashboard'),
 ]

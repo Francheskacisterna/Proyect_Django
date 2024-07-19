@@ -16,49 +16,77 @@
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px; /* Reduce the font size */
-    }
+        h1 {
+            color: #333;
+        }
 
-    table, th, td {
-        border: 1px solid black;
-    }
+        #idMensajes {
+            margin: 20px 0;
+        }
 
-    th, td {
-        padding: 4px; /* Reduce padding to make the table smaller */
-        text-align: left;
-    }
+        .message {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #e7f3fe;
+            color: #31708f;
+            border-radius: 5px;
+        }
 
-    th {
-        background-color: #f2f2f2;
-    }
+        .button-container {
+            margin-bottom: 20px;
+        }
 
-    .action-btn {
-        display: block;
-        margin: 2px 0;
-        padding: 4px 8px;
-        text-align: center;
-        background-color: blue;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-    }
+        .button-container a {
+            text-decoration: none;
+            color: white;
+        }
 
-    .action-btn:hover {
-        background-color: darkblue;
-    }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .action-btn:nth-child(2) {
-        background-color: yellow;
-        color: black;
-    }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
 
-    .action-btn:nth-child(2):hover {
-        background-color: orange;
-    }
-</style>
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .actions a {
+            margin-right: 10px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
@@ -129,48 +157,49 @@
                 </div>
     </nav>
     <!--End Navbar-->
-    <h1>Lista de Alumnos</h1>
+    <h1>Lista de Clases</h1>
     <div id="idMensajes">
         {% if mensaje %}
-        <div>{{ mensaje }}</div>
+        <div class="message">{{ mensaje }}</div>
         {% endif %}
     </div>
-    <button type="button">
-        <a href="{% url 'alumnos_Add' %}">Agregar</a>
-    </button>
+    <div class="button-container">
+        <button type="button">
+            <a href="{% url 'clases_Add' %}">Agregar</a>
+        </button>
+    </div>
     <table>
-        {% if alumnos %}
+        {% if clases %}
         <thead>
             <tr>
-                <th>RUT</th>
-                <th>Nombre</th>
-                <th>Nivel de Educación</th>
-                <th>Dirección</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Correo Electrónico</th>
-                <th>Teléfono</th>
-                <th>Género</th>
+                <th>ID</th>
+                <th>Nombre del Curso</th>
+                <th>Modalidad</th>
+                <th>Horario</th>
+                <th>Profesor</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for alumno in alumnos %}
+            {% for clase in clases %}
             <tr>
-                <td>{{ alumno.rut }}</td>
-                <td>{{ alumno.nombre }}</td>
-                <td>{{ alumno.get_nivel_educacion_display }}</td>
-                <td>{{ alumno.direccion }}</td>
-                <td>{{ alumno.fecha_nacimiento }}</td>
-                <td>{{ alumno.correo_electronico }}</td>
-                <td>{{ alumno.telefono }}</td>
-                <td>{{ alumno.genero.descripcion }}</td>
-                <td>
-                <td>
-                   <a href="{% url 'alumnos_del'  pk=alumno.rut %}">Eliminar</a>
-                <td> 
-                   <a href="{% url 'alumnos_findEdit' pk=alumno.rut %}">Modificar</a>
+                <td>{{ clase.id_clase }}</td>
+                <td>{{ clase.nombre_curso }}</td>
+                <td>{{ clase.get_modalidad_display }}</td>
+                <td>{{ clase.horario }}</td>
+                <td>{{ clase.id_profesor.nombre }}</td>
+                <td class="actions">
+                    <a href="{% url 'clases_del' pk=clase.id_clase %}">Eliminar</a>
+                    <a href="{% url 'clases_findEdit' pk=clase.id_clase %}">Modificar</a>
                 </td>
             </tr>
             {% endfor %}
+        </tbody>
+        {% else %}
+        <tbody>
+            <tr>
+                <td colspan="6">No hay clases disponibles.</td>
+            </tr>
         </tbody>
         {% endif %}
     </table>

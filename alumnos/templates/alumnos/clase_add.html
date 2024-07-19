@@ -132,69 +132,45 @@
         <div class="row align-items-stretch">
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
             <div class="col bg-white p-5 rounded-end">
-                <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
-                <!-- Formulario de registro de alumno -->
-                <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST">
+                <h2 class="fw-bold text-center py-5">Crear Cuenta de Clase</h2>
+                <!-- Formulario de registro de clase -->
+                <form id="formClasesAdd" action="{% url 'clases_Add' %}" method="POST">
                     {% csrf_token %}
-                    <!-- Campos personalizados para el registro de alumno -->
+                    <!-- Campos personalizados para el registro de clase -->
                     <div class="mb-4 w-100">
-                        <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
+                        <label for="nombre_curso" class="form-label">Nombre del Curso</label>
+                        <input type="text" class="form-control" id="nombre_curso" name="nombre_curso" required>
                         <div class="invalid-feedback">
-                            Por favor ingresa el RUT del alumno.
+                            Por favor ingresa el nombre del curso.
                         </div>
                     </div>
                     <div class="mb-4 w-100">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el nombre completo.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la dirección.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la fecha de nacimiento.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="correo_electronico" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo electrónico válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}"
-                            required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un número de teléfono válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
-                        <select class="form-control" id="nivel_educacion" name="nivel_educacion">
-                            <option value="basica">Básica</option>
-                            <option value="media">Media</option>
-                            <option value="superior">Superior</option>
+                        <label for="modalidad" class="form-label">Modalidad</label>
+                        <select class="form-control" id="modalidad" name="modalidad" required>
+                            <option value="online">Online</option>
+                            <option value="presencial">Presencial</option>
                         </select>
+                        <div class="invalid-feedback">
+                            Por favor selecciona la modalidad.
+                        </div>
                     </div>
                     <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero">
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                        <label for="horario" class="form-label">Horario</label>
+                        <input type="time" class="form-control" id="horario" name="horario" required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa el horario.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="id_profesor" class="form-label">Profesor</label>
+                        <select class="form-control" id="id_profesor" name="id_profesor" required>
+                            {% for profesor in profesores %}
+                            <option value="{{ profesor.id_profesor }}">{{ profesor.nombre }}</option>
                             {% endfor %}
                         </select>
+                        <div class="invalid-feedback">
+                            Por favor selecciona un profesor.
+                        </div>
                     </div>
                     <!-- Botón de enviar -->
                     <div class="d-grid w-100">
@@ -210,7 +186,7 @@
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('formAlumnosAdd').addEventListener('submit', function (event) {
+        document.getElementById('formClasesAdd').addEventListener('submit', function (event) {
             event.preventDefault();  // Evitar el envío normal del formulario
             var formData = new FormData(this);
 

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Alumno, Genero, Tutor
+from .models import Alumno, Genero, Tutor, Profesor, Clase
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -144,8 +145,6 @@ def alumnos_Update(request):
         context = {'alumnos': alumnos}
         return render(request, 'alumnos/alumnos_list.html', context)
 
-
-
 def alumnos_reg(request):
     if request.method == 'POST':
         try:
@@ -181,7 +180,7 @@ def alumnos_reg(request):
 def crud_profesor(request):
     profesores = Profesor.objects.all()
     context = {'profesores': profesores}
-    return render(request, 'profesor/profesor_list.html', context)
+    return render(request, 'alumnos/profesor_list.html', context)
 
 def profesor_Add(request):
     if request.method == 'POST':
@@ -212,7 +211,7 @@ def profesor_Add(request):
             return JsonResponse({"success": False, "message": str(e)})
 
     generos = Genero.objects.all()
-    return render(request, 'profesor/profesor_add.html', {'generos': generos})
+    return render(request, 'alumnos/profesor_add.html', {'generos': generos})
 
 def profesor_del(request, pk):
     context = {}
@@ -222,53 +221,158 @@ def profesor_del(request, pk):
         mensaje = "Bien, datos eliminados..."
         profesores = Profesor.objects.all()
         context = {'profesores': profesores, 'mensaje': mensaje}
-        return render(request, 'profesor/profesor_list.html', context)
+        return render(request, 'alumnos/profesor_list.html', context)
     except:
         mensaje = "Error, rut no existe"
         profesores = Profesor.objects.all()
         context = {'profesores': profesores, 'mensaje': mensaje}
-        return render(request, 'profesor/profesor_list.html', context)
+        return render(request, 'alumnos/profesor_list.html', context)
 
-def profesor_find_edit(request, pk):
+def profesor_findEdit(request, pk):
     profesores = Profesor.objects.filter(rut=pk)
     generos = Genero.objects.all()
 
     if profesores.count() == 1:
         profesor = profesores.first()
         context = {'profesor': profesor, 'generos': generos}
-        return render(request, 'profesor/profesor_edit.html', context)
+        return render(request, 'alumnos/profesor_edit.html', context)
     elif profesores.count() > 1:
         context = {'profesores': profesores, 'generos': generos}
-        return render(request, 'profesor/multiple_profesores.html', context)
+        return render(request, 'alumnos/multiple_profesores.html', context)
     else:
         context = {'mensaje': "Error, rut no existe..."}
-        return render(request, 'profesor/profesor_list.html', context)
+        return render(request, 'alumno/profesor_list.html', context)
 
-def alumnosUpdate(request):
+
+def profesorUpdate(request):
     if request.method == "POST":
-        id_alumno = request.POST.get('id_alumno')
-        alumno = get_object_or_404(Alumno, id_alumno=id_alumno)
+        id_profesor = request.POST.get('id_profesor')
+        profesor = get_object_or_404(Profesor, pk=id_profesor)
 
-        alumno.nombre = request.POST.get("nombre")
-        alumno.rut = request.POST.get("rut")
-        alumno.nivel_educacion = request.POST.get("nivel_educacion")
-        alumno.direccion = request.POST.get("direccion")
-        alumno.fecha_nacimiento = request.POST.get("fecha_nacimiento")
-        alumno.telefono = request.POST.get("telefono")
-        alumno.correo_electronico = request.POST.get("correo_electronico")
+        profesor.nombre = request.POST.get("nombre")
+        profesor.rut = request.POST.get("rut")
+        profesor.especialidad = request.POST.get("especialidad")
+        profesor.direccion = request.POST.get("direccion")
+        profesor.fecha_nacimiento = request.POST.get("fecha_nacimiento")
+        profesor.telefono = request.POST.get("telefono")
+        profesor.correo_electronico = request.POST.get("correo_electronico")
         genero_id = request.POST.get("genero")
-        alumno.genero = Genero.objects.get(id_genero=genero_id)
+        profesor.genero = Genero.objects.get(id=genero_id)
 
-        alumno.save()
+        profesor.save()
 
         generos = Genero.objects.all()
         context = {
             'mensaje': "Ok, datos actualizados...",
             'generos': generos,
-            'alumno': alumno
+            'profesor': profesor
         }
-        return render(request, 'alumnos/alumnos_edit.html', context)
+        return render(request, 'alumnos/profesor_edit.html', context)
     else:
-        alumnos = Alumno.objects.all()
-        context = {'alumnos': alumnos}
-        return render(request, 'alumnos/alumnos_list.html', context)
+        profesores = Profesor.objects.all()
+        context = {'profesores': profesores}
+        return render(request, 'alumnos/profesor_list.html', context)
+
+def crud_clases(request):
+    clases = Clase.objects.all()
+    context = {'clases': clases}
+    return render(request, 'clases/clases_list.html', context)
+
+def clases_Add(request):
+    if request.method == 'POST':
+        try:
+            nombre_curso = request.POST['nombre_curso']
+            modalidad = request.POST['modalidad']
+            horario = request.POST['horario']
+            id_profesor = request.POST['id_profesor']
+
+            profesor = Profesor.objects.get(id_profesor=id_profesor)
+
+            Clase.objects.create(
+                nombre_curso=nombre_curso,
+                modalidad=modalidad,
+                horario=horario,
+                id_profesor=profesor
+            )
+            return JsonResponse({"success": True, "message": "Clase registrada exitosamente."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+
+    profesores = Profesor.objects.all()
+    return render(request, 'clases/clases_add.html', {'profesores': profesores})
+
+def clases_del(request, pk):
+    context = {}
+    try:
+        clase = Clase.objects.get(id_clase=pk)
+        clase.delete()
+        mensaje = "Bien, datos eliminados..."
+        clases = Clase.objects.all()
+        context = {'clases': clases, 'mensaje': mensaje}
+        return render(request, 'clases/clases_list.html', context)
+    except Clase.DoesNotExist:
+        mensaje = "Error, clase no existe"
+        clases = Clase.objects.all()
+        context = {'clases': clases, 'mensaje': mensaje}
+        return render(request, 'clases/clases_list.html', context)
+
+def clases_findEdit(request, pk):
+    clases = Clase.objects.filter(id_clase=pk)
+    profesores = Profesor.objects.all()
+
+    if clases.count() == 1:
+        clase = clases.first()
+        context = {'clase': clase, 'profesores': profesores}
+        return render(request, 'clases/clases_edit.html', context)
+    elif clases.count() > 1:
+        context = {'clases': clases, 'profesores': profesores}
+        return render(request, 'clases/multiple_clases.html', context)
+    else:
+        context = {'mensaje': "Error, la clase no existe..."}
+        return render(request, 'clases/clases_list.html', context)
+
+def clases_Update(request):
+    if request.method == "POST":
+        id_clase = request.POST.get('id_clase')
+        clase = get_object_or_404(Clase, id_clase=id_clase)
+
+        clase.nombre_curso = request.POST.get("nombre_curso")
+        clase.modalidad = request.POST.get("modalidad")
+        clase.horario = request.POST.get("horario")
+        id_profesor = request.POST.get("id_profesor")
+        clase.id_profesor = Profesor.objects.get(id_profesor=id_profesor)
+
+        clase.save()
+
+        profesores = Profesor.objects.all()
+        context = {
+            'mensaje': "Ok, datos actualizados...",
+            'profesores': profesores,
+            'clase': clase
+        }
+        return render(request, 'clases/clases_edit.html', context)
+    else:
+        clases = Clase.objects.all()
+        context = {'clases': clases}
+        return render(request, 'clases/clases_list.html', context)
+
+def lista_combinada(request):
+    alumnos = Alumno.objects.all()
+    profesores = Profesor.objects.all()
+    context = {
+        'alumnos': alumnos,
+        'profesores': profesores
+
+    }
+    return render(request, 'alumnos/lista_combinada.html', context)
+
+@login_required
+def dashboard(request):
+    if request.user.user_type == 1:  # Admin
+        return render(request, 'menu_.html')
+    elif request.user.user_type == 2:  # Profesor
+        return render(request, 'menu_prof.html')
+    elif request.user.user_type == 3:  # Estudiante
+        return render(request, 'menu_stud.html')
+    else:
+        return redirect('home')

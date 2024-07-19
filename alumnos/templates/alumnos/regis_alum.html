@@ -95,7 +95,7 @@
             <div class="col bg-white p-5 rounded-end">
                 <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
                 <!-- Formulario de registro de alumno -->
-                <form id="formAlumnosreg" action="{% url 'alumnos_reg' %}" method="POST">
+                <form id="formAlumnosreg" action="" method="POST">                    
                     {% csrf_token %}
                     <!-- Campos personalizados para el registro de alumno -->
                     <div class="mb-4 w-100">
@@ -131,6 +131,22 @@
                         <input type="email" class="form-control" id="email" name="correo_electronico" required>
                         <div class="invalid-feedback">
                             Por favor ingresa un correo electrónico válido.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="username" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="username" name="username" 
+                            required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa un nombre de usuario.
+                        </div>
+                    </div>
+                    <div class="mb-4 w-100">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password" 
+                            required>
+                        <div class="invalid-feedback">
+                            Por favor ingresa una contraseña.
                         </div>
                     </div>
                     <div class="mb-4 w-100">
@@ -174,7 +190,7 @@
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+    <!-- <script>
         document.getElementById('formAlumnosreg').addEventListener('submit', function (event) {
             event.preventDefault();  // Evitar el envío normal del formulario
             var formData = new FormData(this);
@@ -200,7 +216,7 @@
                     });
                 });
         });
-    </script>
+    </script> -->
     </script>
 </body>
 </html>

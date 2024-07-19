@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actualizar Datos de Profesor</title>
+    <title>Actualizar Datos de Alumno</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,46 +71,33 @@
 </head>
 <body>
     <div class="container">
-        {% if profesor %}
-            <h2>Formulario para Actualizar Datos de Profesor</h2>
-            <form action="{% url 'profesorUpdate' %}" method="POST">
+        {% if clase %}
+            <h2>Formulario para Actualizar Datos de Clase</h2>
+            <form action="{% url 'clases_Update'%}" method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="id_profesor" value="{{ profesor.id_profesor }}">
+                <input type="hidden" name="id_clase" value="{{ clase.id_clase }}">
                 <div class="form-group">
-                    <label for="rut">Rut:</label>
-                    <input type="text" id="rut" name="rut" value="{{ profesor.rut }}" readonly>
+                    <label for="nombre_curso">Nombre del Curso:</label>
+                    <input type="text" id="nombre_curso" name="nombre_curso" value="{{ clase.nombre_curso }}">
                 </div>
                 <div class="form-group">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" value="{{ profesor.nombre }}">
-                </div>
-                <div class="form-group">
-                    <label for="especialidad">Especialidad:</label>
-                    <input type="text" id="especialidad" name="especialidad" value="{{ profesor.especialidad }}">
-                </div>
-                <div class="form-group">
-                    <label for="fecha_nacimiento">Fecha Nac.:</label>
-                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ profesor.fecha_nacimiento|date:'Y-m-d' }}">
-                </div>
-                <div class="form-group">
-                    <label for="genero">Género:</label>
-                    <select id="genero" name="genero">
-                        {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}" {% if genero.id_genero == profesor.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
-                        {% endfor %}
+                    <label for="modalidad">Modalidad:</label>
+                    <select id="modalidad" name="modalidad">
+                        <option value="online" {% if clase.modalidad == 'online' %}selected{% endif %}>Online</option>
+                        <option value="presencial" {% if clase.modalidad == 'presencial' %}selected{% endif %}>Presencial</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="telefono">Teléfono:</label>
-                    <input type="text" id="telefono" name="telefono" value="{{ profesor.telefono }}">
+                    <label for="horario">Horario:</label>
+                    <input type="time" id="horario" name="horario" value="{{ clase.horario }}">
                 </div>
                 <div class="form-group">
-                    <label for="correo_electronico">Email:</label>
-                    <input type="email" id="correo_electronico" name="correo_electronico" value="{{ profesor.correo_electronico }}">
-                </div>
-                <div class="form-group">
-                    <label for="direccion">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" value="{{ profesor.direccion }}">
+                    <label for="id_profesor">Profesor:</label>
+                    <select id="id_profesor" name="id_profesor">
+                        {% for profesor in profesores %}
+                            <option value="{{ profesor.id_profesor }}" {% if profesor.id_profesor == clase.id_profesor.id_profesor %}selected{% endif %}>{{ profesor.nombre }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Actualizar">
@@ -119,12 +106,13 @@
         {% endif %}
         <div id="idMensajes">
             {% if mensaje %}
-                {{ mensaje }}
+                <div class="message">{{ mensaje }}</div>
             {% endif %}
         </div>
         <div class="form-group">
-            <a href="{% url 'crud_profesor' %}">Volver</a>
+            <a href="{% url 'crud_clases' %}">Volver</a>
         </div>
     </div>
 </body>
 </html>
+
