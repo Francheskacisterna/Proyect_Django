@@ -25,13 +25,3 @@ def contactos_prof(request):
     context = {}
     return render(request, 'user_prof/contactos_prof.html', context)
 
-@login_required
-def dashboard(request):
-    if request.user.user_type == 1:  # Admin
-        return render(request, 'menu_.html')
-    elif request.user.user_type == 2:  # Profesor
-        return render(request, 'menu_prof.html')
-    elif request.user.user_type == 3:  # Estudiante
-        return render(request, 'menu_stud.html')
-    else:
-        return redirect('home')

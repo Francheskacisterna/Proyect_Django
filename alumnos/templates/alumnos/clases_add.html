@@ -125,75 +125,74 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <h2 class="text-center">Crear Inscripción</h2>
-                <!-- Display messages -->
-                {% if messages %}
-                <div class="alert alert-info">
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <form id="formInscripcionesAdd" action="{% url 'inscripcion_Add' %}" method="POST">
+                <h2 class="text-center">Crear Cuenta de Clase</h2>
+                <form id="formClasesAdd" action="{% url 'clases_Add' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="id_alumno">Alumno:</label>
-                        <select id="id_alumno" name="id_alumno" class="form-control" required>
-                            {% for alumno in alumnos %}
-                                <option value="{{ alumno.id_alumno }}">{{ alumno.nombre }}</option>
-                            {% endfor %}
+                        <label for="nombre_curso">Nombre del Curso</label>
+                        <input type="text" id="nombre_curso" name="nombre_curso" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modalidad">Modalidad</label>
+                        <select id="modalidad" name="modalidad" required>
+                            <option value="online">Online</option>
+                            <option value="presencial">Presencial</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="id_clase">Clase:</label>
-                        <select id="id_clase" name="id_clase" class="form-control" required>
-                            {% for clase in clases %}
-                                <option value="{{ clase.id_clase }}">{{ clase.nombre_curso }}</option>
+                        <label for="horario">Horario</label>
+                        <input type="time" id="horario" name="horario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_profesor">Profesor</label>
+                        <select id="id_profesor" name="id_profesor" required>
+                            {% for profesor in profesores %}
+                            <option value="{{ profesor.id_profesor }}">{{ profesor.nombre }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <button type="submit">Registrar</button>
                 </form>
                 <div class="form-group mt-3">
-                    <a href="{% url 'crud_inscripciones' %}" class="btn btn-secondary">Volver a la lista</a>
+                    <button type="button">
+                        <a href="{% url 'crud_clases' %}">Volver</a>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('formInscripcionesAdd').addEventListener('submit', function (event) {
-                event.preventDefault();  // Evitar el envío normal del formulario
-                var formData = new FormData(this);
-        
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                    }
-                }).then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            title: 'Respuesta del Servidor',
-                            text: data.message,
-                            icon: data.success ? 'success' : 'error'
-                        });
-                    }).catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Hubo un problema con la petición Fetch',
-                            icon: 'error'
-                        });
+        document.getElementById('formClasesAdd').addEventListener('submit', function (event) {
+            event.preventDefault();  // Evitar el envío normal del formulario
+            var formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Respuesta del Servidor',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
                     });
-            });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema con la petición',
+                        icon: 'error'
+                    });
+                });
         });
-        </script>
+    </script>
     </script>
 </body>
 

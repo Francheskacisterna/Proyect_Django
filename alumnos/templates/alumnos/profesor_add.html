@@ -1,38 +1,117 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'img/Logo.png' %}">
-    <title>Registro de Profesores - LBWUS</title>
+    <!-- Bootstrap CSS (librerias)-->
+    <title>LBWUS</title>
+    {% load static %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{% static 'profesores/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'profesores/style/estilo.css' %}">
-    <script src="{% static 'profesores/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
+    <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
+
 </head>
-<style>
-    body {
-        background: #a159d8;
-        background: linear-gradient(to right, #ff96ca, #c2b6f3);
+<style> 
+    .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        margin: 100px auto;
     }
-    .bg {
-        background-image: url("{% static 'profesores/img/prueb1.jpeg' %}");
-        background-position: center center;
+    h2 {
+        margin-bottom: 20px;
+        color: #333333;
     }
-    .container-login-custom-new {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        padding-top: 80px;
-        padding-bottom: 50px;
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555555;
+    }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .form-group input[type="submit"] {
+        background-color: #5cb85c;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .form-group input[type="submit"]:hover {
+        background-color: #4cae4c;
+    }
+    .form-group a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .form-group a:hover {
+        color: #0056b3;
+    }
+    #idMensajes {
+        margin-top: 20px;
+        color: #d9534f;
+    }
+    .offcanvas-header .btn-close {
+        filter: invert(1);
+    }
+    .bg-primary {
+        background-color: #6a1b9a !important; /* Adjust as needed */
+    }
+    .btn-primary {
+        background-color: #6a1b9a;
+        border-color: #6a1b9a;
+    }
+    .btn-primary:hover {
+        background-color: #5c138a;
+        border-color: #5c138a;
+    }
+    .btn-secondary {
+        background-color: #a2a2a2;
+        border-color: #a2a2a2;
+    }
+    .btn-secondary:hover {
+        background-color: #8a8a8a;
+        border-color: #8a8a8a;
+    }
+    .theme-dark {
+        background-color: #333;
+        color: #fff;
+    }
+    .theme-dark .navbar,
+    .theme-dark .offcanvas-header {
+        background-color: #222;
+    }
+    .theme-dark .navbar-brand, 
+    .theme-dark .navbar-nav .nav-link {
+        color: #fff;
+    }
+    .theme-dark .btn-outline-light {
+        color: #fff;
+        border-color: #fff;
     }
 </style>
 <body>
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'profesores/img/Logo.png' %}" alt="Logo" width="50px">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px">
                 LBWUS
             </a>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -70,66 +149,97 @@
             </button>
         </div>
     </nav>
-    <div class="container w-75 bg-primary mt-4 rounded shadow">
-        <div class="row align-items-stretch">
-            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
-            <div class="col bg-white p-5 rounded-end">
-                <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
-                <form id="formProfesoresAdd" action="{% url 'profesor_Add' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="mb-4 w-100">
-                        <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="especialidad" class="form-label">Especialidad</label>
-                        <input type="text" class="form-control" id="especialidad" name="especialidad" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="correo_electronico" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero">
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="d-grid w-100">
-                        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-                    </div>
-                </form>
-                <div class="my-3 text-center w-100">
-                    <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
+    <div class="container">
+        <h2 class="fw-bold text-center py-3"> Agregar Profesor</h2>
+        <form id="formProfreg" action="{% url 'profesor_Add' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="rut" class="form-label">RUT</label>
+                <input type="text" id="rut" name="rut" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa el RUT del Profesor.
                 </div>
             </div>
+            <div class="form-group">
+                <label for="nombre" class="form-label">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa el nombre completo.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" id="direccion" name="direccion" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa la dirección.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa la fecha de nacimiento.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                <input type="email" id="correo_electronico" name="correo_electronico" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa un correo electrónico válido.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="form-label">Usuario</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa un nombre de usuario.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa una contraseña.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" class="form-control" pattern="[0-9]{9}" required>
+                <div class="invalid-feedback">
+                    Por favor ingresa un número de teléfono válido.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="genero" class="form-label">Género</label>
+                <select id="genero" name="genero" class="form-control">
+                    {% for genero in generos %}
+                    <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="especialidad" class="form-label">Especialidad</label>
+                <select id="especialidad" name="especialidad" class="form-control">
+                    {% for especialidad in especialidades %}
+                    <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+            </div>
+        </form>
+        <div class="form-group mt-3">
+            <a href="{% url 'crud_profesor' %}" class="btn btn-secondary">Volver</a>
         </div>
-    </div>
+    </div>       
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('formProfesoresAdd').addEventListener('submit', function (event) {
+        document.getElementById('formProfreg').addEventListener('submit', function (event) {
             event.preventDefault();
             var formData = new FormData(this);
 
@@ -145,6 +255,10 @@
                         title: 'Respuesta del Servidor',
                         text: data.message,
                         icon: data.success ? 'success' : 'error'
+                    }).then(() => {
+                        if (data.success) {
+                            window.location.reload();  // Recargar la página para ver los cambios
+                        }
                     });
                 }).catch(error => {
                     Swal.fire({

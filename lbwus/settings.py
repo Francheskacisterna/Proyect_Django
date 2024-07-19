@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'lbwus.urls'
@@ -70,8 +71,9 @@ TEMPLATES = [
         },
     },
 ]
-LOGIN_REDIRECT_URL="menu"
-LOGOUT_REDIRECT_URL="home_adm"
+LOGIN_REDIRECT_URL = '/menu/'
+LOGOUT_REDIRECT_URL = '/home/'
+LOGIN_URL = '/login/'
 WSGI_APPLICATION = 'lbwus.wsgi.application'
 
 
@@ -128,3 +130,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'alumnos.CustomUser'  
+
+AUTHENTICATION_BACKENDS = [
+    #'lbwus.auth_backend.AlumnoBackend',
+    'django.contrib.auth.backends.ModelBackend',
+
+]

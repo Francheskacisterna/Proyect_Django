@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Datos de Alumno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="submit"] {
+            background-color: #5cb85c;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .form-group a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .form-group a:hover {
+            color: #0056b3;
+        }
+        #idMensajes {
+            margin-top: 20px;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if clase %}
+            <h2>Formulario para Actualizar Datos de Clase</h2>
+            <form action="{% url 'clases_Update'%}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id_clase" value="{{ clase.id_clase }}">
+                <div class="form-group">
+                    <label for="nombre_curso">Nombre del Curso:</label>
+                    <input type="text" id="nombre_curso" name="nombre_curso" value="{{ clase.nombre_curso }}">
+                </div>
+                <div class="form-group">
+                    <label for="modalidad">Modalidad:</label>
+                    <select id="modalidad" name="modalidad">
+                        <option value="online" {% if clase.modalidad == 'online' %}selected{% endif %}>Online</option>
+                        <option value="presencial" {% if clase.modalidad == 'presencial' %}selected{% endif %}>Presencial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="horario">Horario:</label>
+                    <input type="time" id="horario" name="horario" value="{{ clase.horario }}">
+                </div>
+                <div class="form-group">
+                    <label for="id_profesor">Profesor:</label>
+                    <select id="id_profesor" name="id_profesor">
+                        {% for profesor in profesores %}
+                            <option value="{{ profesor.id_profesor }}" {% if profesor.id_profesor == clase.id_profesor.id_profesor %}selected{% endif %}>{{ profesor.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Actualizar">
+                </div>
+            </form>
+        {% endif %}
+        <div id="idMensajes">
+            {% if mensaje %}
+                <div class="message">{{ mensaje }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <a href="{% url 'crud_clases' %}">Volver</a>
+        </div>
+    </div>
+</body>
+</html>
+

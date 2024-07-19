@@ -1,6 +1,6 @@
-#from django.conf.urls import url
 from django.urls import path
-from .views import home, contactos, nosotros, planes, servicios, simulador, opcion_user, regis_prof, regis_alum, regis_tutor, crud, alumnos_Add, alumnos_del, alumnos_findEdit, alumnos_Update, alumnos_reg, crud_profesor, profesor_Add, profesor_del, profesor_findEdit, profesorUpdate, lista_combinada, dashboard
+from django.views.generic import TemplateView
+from .views import (CustomLoginView, home, contactos, nosotros, planes, servicios, simulador, opcion_user, regis_prof, regis_alum, regis_tutor, crud, alumnos_Add, alumnos_del, alumnos_findEdit, alumnos_Update, alumnos_reg, crud_profesor, profesor_Add, profesor_del, profesor_findEdit, profesorUpdate, lista_combinada, crud_clases, clases_Add, clases_del, clases_findEdit, clases_Update, crud_inscripciones, inscripcion_Add, inscripcion_del, inscripcion_findEdit, inscripcion_update, crud_tutor, tutor_Add, tutor_del, tutor_findEdit, tutor_Update)
 
 urlpatterns = [
     path('', home, name='home'),
@@ -21,12 +21,34 @@ urlpatterns = [
     path('alumnos/alumnos_Update', alumnos_Update, name='alumnos_Update'),
     path('alumnos/alumnos_reg', alumnos_reg, name='alumnos_reg'),
 
-    path('profesor/crud', crud_profesor, name='crud_profesores'),
+    path('profesor/crud', crud_profesor, name='crud_profesor'),
     path('profesor/add/', profesor_Add, name='profesor_Add'),
     path('profesor/del/<str:pk>/', profesor_del, name='profesor_del'),
-    path('profesor/edit/<str:pk>', profesor_findEdit, name='profesor_findEdit'),
+    path('profesor/edit/<str:pk>/', profesor_findEdit, name='profesor_findEdit'),
     path('profesor/update/', profesorUpdate, name='profesorUpdate'),
 
+    path('clases/crud', crud_clases, name='crud_clases'),
+    path('clases/add', clases_Add, name='clases_Add'),
+    path('clases/del/<str:pk>/', clases_del, name='clases_del'),
+    path('clases/findEdit/<str:pk>/', clases_findEdit, name='clases_findEdit'),
+    path('clases/update', clases_Update, name='clases_Update'),
+
+    path('inscripcion/crud', crud_inscripciones, name='crud_inscripciones'),
+    path('inscripcion/add', inscripcion_Add, name='inscripcion_Add'),
+    path('inscripcion/del/<str:pk>/', inscripcion_del, name='inscripcion_del'),
+    path('inscripcion/findEdit/<str:pk>', inscripcion_findEdit, name='inscripcion_findEdit'),
+    path('inscripcion/update', inscripcion_update, name='inscripcion_update'),
+
+    path('tutor/crud', crud_tutor, name='crud_tutor'),
+    path('tutor/add', tutor_Add, name='tutor_Add'),
+    path('tutor/del/<str:pk>', tutor_del, name='tutor_del'),
+    path('tutor/findEdit/<str:pk>', tutor_findEdit, name='tutor_findEdit'),
+    path('tutor/update', tutor_Update, name='tutor_Update'),
+
     path('listacli/', lista_combinada, name='lista_combinada'),
-    path('dashboard/', dashboard, name='dashboard'),
+    path('accounts/login/', CustomLoginView.as_view(), name='login'),
+    path('admin/menu/', TemplateView.as_view(template_name='admin_portal/menu.html'), name='admin_menu'),
+    path('profesor/menu/', TemplateView.as_view(template_name='user_profesor/menu_prof.html'), name='profesor_menu'),
+    path('alumno/menu/', TemplateView.as_view(template_name='students_portal/menu_stud.html'), name='alumno_menu'),
+    path('tutor/menu/', TemplateView.as_view(template_name='tutor_portal/menu_tutor.html'), name='tutor_menu'),
 ]

@@ -17,12 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from alumnos.views import menu, CustomLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('alumnos/', include('alumnos.urls')),
+    path('', include('alumnos.urls')),
     path('admin_portal/', include('admin_portal.urls')),
-
-    path("accounts/", include("django.contrib.auth.urls")),
-    
+    path('user_profesor/', include('user_profesor.urls')),
+    path('students_portal/', include('students_portal.urls')),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('menu/', menu, name='menu'),
 ]

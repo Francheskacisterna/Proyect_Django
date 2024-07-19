@@ -32,19 +32,19 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'home' %}">Inicio</a>
+                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'home_prof' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'planes' %}">Planes</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'planes_prof' %}">Planes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'servicios' %}">Servicios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'nosotros' %}">Nosotros</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'nosotros_prof' %}">Nosotros</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'contactos' %}">Contactos</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'contactos_prof' %}">Contactos</a>
                         </li>                        
                     </ul>
                 </div>
@@ -168,7 +168,7 @@
                             <p class="lead">Avanza hacia tus metas con nuestro plan intermedio, diseñado para adaptarse
                                 y responder a tus inquietudes educativas. Sea cual sea tu horario, nuestra metodología
                                 flexible se alinea con tu ritmo de vida.</p>
-                                <button class="btn btn-warning text-dark" onclick="location.href='{% url 'simulador' %}';">Simula aquí</button>
+                                <button class="btn btn-warning text-dark" href="{% url 'simulador' %}">Simula aquí</button>
                         </div>
                     </div>
                 </div>
