@@ -161,14 +161,6 @@
                         </div>
                     </div>
                     <div class="mb-4 w-100">
-                        <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
-                        <select class="form-control" id="nivel_educacion" name="nivel_educacion">
-                            <option value="basica">Básica</option>
-                            <option value="media">Media</option>
-                            <option value="superior">Superior</option>
-                        </select>
-                    </div>
-                    <div class="mb-4 w-100">
                         <label for="genero" class="form-label">Género</label>
                         <select class="form-control" id="genero" name="genero">
                             {% for genero in generos %}
@@ -194,13 +186,40 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'alumnos/java/main.js' %}"></script>
+    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('formProfreg').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'alumnos/java/main.js' %}"></script>
-<script src="{% static 'alumnos/java/jquery.js' %}"></script>
-<script
-src="https://kit.fontawesome.com/81581fb069.js"
-crossorigin="anonymous"
-></script>
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Respuesta del Servidor',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
+                    }).then(() => {
+                        if (data.success) {
+                            window.location.reload();  // Recargar la página para ver los cambios
+                        }
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema con la petición',
+                        icon: 'error'
+                    });
+                });
+        });
+    </script>
 </body>
 </html>

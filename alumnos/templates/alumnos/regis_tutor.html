@@ -84,15 +84,17 @@
             </button>
         </div>
     </nav>
+     <!--End Navbar-->
+     
     <div class="container w-75 bg-primary mt-4 rounded shadow">
         <div class="row align-items-stretch">
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
             <div class="col bg-white p-5 rounded-end">
                 <h2 class="fw-bold text-center py-5">Crear Cuenta de Tutor</h2>
-                <!-- Formulario de registro de alumno -->
-                <form id="formTutoreg" action="" method="POST">                    
+                <!-- Formulario de registro de tutor -->
+                <form id="formTutoreg" action="{% url 'regis_tutor' %}" method="POST">                    
                     {% csrf_token %}
-                    <!-- Campos personalizados para el registro de alumno -->
+                    <!-- Campos personalizados para el registro de tutor -->
                     <div class="mb-4 w-100">
                         <label for="rut" class="form-label">RUT</label>
                         <input type="text" class="form-control" id="rut" name="rut" required>
@@ -180,15 +182,42 @@
             </div>
         </div>
     </div>
-<!--End Navbar-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('formTutoreg').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
 
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            }).then(response => response.json())
+                .then(data => {
+                    Swal.fire({
+                        title: 'Respuesta del Servidor',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
+                    }).then(() => {
+                        if (data.success) {
+                            window.location.reload();  // Recargar la página para ver los cambios
+                        }
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema con la petición',
+                        icon: 'error'
+                    });
+                });
+        });
+    </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'alumnos/java/main.js' %}"></script>
-<script src="{% static 'alumnos/java/jquery.js' %}"></script>
-<script
-src="https://kit.fontawesome.com/81581fb069.js"
-crossorigin="anonymous"
-></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'alumnos/java/main.js' %}"></script>
+    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
 </body>
 </html>

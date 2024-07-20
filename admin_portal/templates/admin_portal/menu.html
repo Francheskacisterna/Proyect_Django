@@ -22,10 +22,12 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
+                    class="d-inline-block align-text-top">
                 LBWUS
             </a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -36,47 +38,51 @@
                             <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'menu' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'planes_adm' %}">Planes</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'crud_clases' %}">Clases</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'crud' %}">Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'nosotros_adm' %}">Nosotros</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'crud_inscripciones' %}">Inscripción</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'contactos_adm' %}">Contactos</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'crud_profesor' %}">Profesores</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {% if user.is_authenticated %}
-                                    {{ user.username }}
+                                {{ user.username }}
                                 {% else %}
-                                    Login
+                                Login
                                 {% endif %}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
                                 {% if user.is_authenticated %}
-                                    <!-- Enlace de cierre de sesión utilizando un formulario -->
-                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
-                                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                                        {% csrf_token %}
-                                    </form>
+                                <!-- Enlace de cierre de sesión utilizando un formulario -->
+                                <a class="dropdown-item" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar
+                                    sesión</a>
+                                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
                                 {% else %}
-                                    <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+                                <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
                                 {% endif %}
                             </div>
-                        </li>                        
+                        </li>
 
-            <!-- Botón para cambiar el tema con iconos -->
-            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                <i class="bi bi-sun"></i>  <!-- Icono predeterminado para el tema claro -->
-            </button>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
+                        <!-- Botón para cambiar el tema con iconos -->
+                        <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                            <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
+                        </button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                </div>
     </nav>
     <!--End Navbar-->
     <!--Carrusel-->
@@ -188,7 +194,7 @@
                             <p class="lead">Avanza hacia tus metas con nuestro plan intermedio, diseñado para adaptarse
                                 y responder a tus inquietudes educativas. Sea cual sea tu horario, nuestra metodología
                                 flexible se alinea con tu ritmo de vida.</p>
-                                <button class="btn btn-warning text-dark" onclick="location.href='{% url 'simulador' %}';">Simula aquí</button>
+                                <button class="btn btn-warning text-dark" href="{% url 'simulador' %}">Simula aquí</button>
                         </div>
                     </div>
                 </div>

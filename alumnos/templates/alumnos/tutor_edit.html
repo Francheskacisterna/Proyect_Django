@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Datos de Alumno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555555;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group input[type="submit"] {
+            background-color: #5cb85c;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .form-group a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .form-group a:hover {
+            color: #0056b3;
+        }
+        #idMensajes {
+            margin-top: 20px;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if tutor %}
+            <h2>Formulario para Actualizar Datos de Tutor</h2>
+            <form action="{% url 'tutor_Update' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id_tutor" value="{{ tutor.id_tutor }}">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" value="{{ tutor.nombre }}">
+                </div>
+                <div class="form-group">
+                    <label for="rut">RUT:</label>
+                    <input type="text" id="rut" name="rut" value="{{ tutor.rut }}">
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" value="{{ tutor.direccion }}">
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ tutor.fecha_nacimiento }}">
+                </div>
+                <div class="form-group">
+                    <label for="correo_electronico">Correo Electrónico:</label>
+                    <input type="email" id="correo_electronico" name="correo_electronico" value="{{ tutor.correo_electronico }}">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" value="{{ tutor.telefono }}">
+                </div>
+                <div class="form-group">
+                    <label for="genero_id">Género:</label>
+                    <select id="genero_id" name="genero_id">
+                        {% for genero in generos %}
+                            <option value="{{ genero.id_genero }}" {% if genero.id_genero == tutor.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de Usuario:</label>
+                    <input type="text" id="username" name="username" value="{{ tutor.username }}">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" value="{{ tutor.password }}">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Actualizar">
+                </div>
+            </form>
+        {% endif %}
+        <div id="idMensajes">
+            {% if mensaje %}
+                <div class="message">{{ mensaje }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <a href="{% url 'crud_tutor' %}">Volver</a>
+        </div>
+    </div>
+</body>
+</html>
+

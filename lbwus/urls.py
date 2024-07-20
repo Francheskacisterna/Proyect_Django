@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin_portal/', include('admin_portal.urls')),
     path('user_profesor/', include('user_profesor.urls')),
     path('students_portal/', include('students_portal.urls')),
+    path('tutor_portal/', include('tutor_portal.urls')),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('menu/', menu, name='menu'),
 ]

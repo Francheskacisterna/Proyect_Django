@@ -95,67 +95,48 @@
             <div class="col bg-white p-5 rounded-end">
                 <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
                 <!-- Formulario de registro de alumno -->
-                <form id="formAlumnosreg" action="" method="POST">                    
+                <form id="formAlumnosreg" action="{% url 'regis_alum' %}" method="POST">                    
                     {% csrf_token %}
                     <!-- Campos personalizados para el registro de alumno -->
                     <div class="mb-4 w-100">
                         <label for="rut" class="form-label">RUT</label>
                         <input type="text" class="form-control" id="rut" name="rut" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el RUT del alumno.
-                        </div>
+                        <div class="invalid-feedback">Por favor ingresa el RUT del alumno.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="nombre" class="form-label">Nombre Completo</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el nombre completo.
-                        </div>
+                        <div class="invalid-feedback">Por favor ingresa el nombre completo.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="direccion" class="form-label">Dirección</label>
                         <input type="text" class="form-control" id="direccion" name="direccion" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la dirección.
-                        </div>
+                        <div class="invalid-feedback">Por favor ingresa la dirección.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
                         <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la fecha de nacimiento.
-                        </div>
+                        <div class="invalid-feedback">Por favor ingresa la fecha de nacimiento.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="correo_electronico" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo electrónico válido.
-                        </div>
+                        <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required>
+                        <div class="invalid-feedback">Por favor ingresa un correo electrónico válido.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="username" class="form-label">Usuario</label>
-                        <input type="text" class="form-control" id="username" name="username" 
-                            required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un nombre de usuario.
-                        </div>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">Por favor ingresa un nombre de usuario.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" 
-                            required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa una contraseña.
-                        </div>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="invalid-feedback">Por favor ingresa una contraseña.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}"
-                            required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un número de teléfono válido.
-                        </div>
+                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
+                        <div class="invalid-feedback">Por favor ingresa un número de teléfono válido.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
@@ -185,16 +166,12 @@
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'alumnos/java/main.js' %}"></script>
-    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
-    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- <script>
+    
+    <script>
         document.getElementById('formAlumnosreg').addEventListener('submit', function (event) {
-            event.preventDefault();  // Evitar el envío normal del formulario
+            event.preventDefault();
             var formData = new FormData(this);
-
+    
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -207,6 +184,10 @@
                         title: 'Respuesta del Servidor',
                         text: data.message,
                         icon: data.success ? 'success' : 'error'
+                    }).then(() => {
+                        if (data.success) {
+                            window.location.reload();
+                        }
                     });
                 }).catch(error => {
                     Swal.fire({
@@ -216,7 +197,13 @@
                     });
                 });
         });
-    </script> -->
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'alumnos/java/main.js' %}"></script>
+    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
     </script>
 </body>
 </html>

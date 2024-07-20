@@ -90,6 +90,8 @@
             <div class="info-form" style="padding-top: 30px;">
                 <form id="contact-form" action="#" method="post" autocomplete="off" class="needs-validation"
                     novalidate>
+                    <!-- se agrega token para que mande el formulario -->                     
+                    {% csrf_token %} 
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre"

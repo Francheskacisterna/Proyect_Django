@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'admin_portal',
     'user_profesor',
     'students_portal',
+    'tutor_portal',
 ]
 
 MIDDLEWARE = [

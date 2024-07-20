@@ -17,67 +17,115 @@
 
 </head>
 <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            width: 100%;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #333333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555555;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-group input[type="submit"] {
-            background-color: #5cb85c;
-            color: #ffffff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .form-group input[type="submit"]:hover {
-            background-color: #4cae4c;
-        }
-        .form-group a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .form-group a:hover {
-            color: #0056b3;
-        }
-        #idMensajes {
-            margin-top: 20px;
-            color: #d9534f;
-        }
+    .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        width: 100%;
+        margin: 100px auto;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #333333;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555555;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[type="submit"] {
+        background-color: #5cb85c;
+        color: #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .form-group input[type="submit"]:hover {
+        background-color: #4cae4c;
+    }
+
+    .form-group a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .form-group a:hover {
+        color: #0056b3;
+    }
+
+    #idMensajes {
+        margin-top: 20px;
+        color: #d9534f;
+    }
+
+    .offcanvas-header .btn-close {
+        filter: invert(1);
+    }
+
+    .bg-primary {
+        background-color: #6a1b9a !important;
+        /* Adjust as needed */
+    }
+
+    .btn-primary {
+        background-color: #6a1b9a;
+        border-color: #6a1b9a;
+    }
+
+    .btn-primary:hover {
+        background-color: #5c138a;
+        border-color: #5c138a;
+    }
+
+    .btn-secondary {
+        background-color: #a2a2a2;
+        border-color: #a2a2a2;
+    }
+
+    .btn-secondary:hover {
+        background-color: #8a8a8a;
+        border-color: #8a8a8a;
+    }
+
+    .theme-dark {
+        background-color: #333;
+        color: #fff;
+    }
+
+    .theme-dark .navbar,
+    .theme-dark .offcanvas-header {
+        background-color: #222;
+    }
+
+    .theme-dark .navbar-brand,
+    .theme-dark .navbar-nav .nav-link {
+        color: #fff;
+    }
+
+    .theme-dark .btn-outline-light {
+        color: #fff;
+        border-color: #fff;
+    }
 </style>
 
 <body>
@@ -128,81 +176,71 @@
         </div>
     </nav>
     <!--End Navbar-->
-    <div class="container w-75 bg-primary mt-4 rounded shadow">
-        <div class="row align-items-stretch">
-            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
-            <div class="col bg-white p-5 rounded-end">
-                <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
-                <!-- Formulario de registro de alumno -->
-                <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST">
-                    {% csrf_token %}
-                    <!-- Campos personalizados para el registro de alumno -->
-                    <div class="mb-4 w-100">
-                        <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el RUT del alumno.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el nombre completo.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la dirección.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la fecha de nacimiento.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="correo_electronico" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo electrónico válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}"
-                            required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un número de teléfono válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nivel_educacion" class="form-label">Nivel de Educación</label>
-                        <select class="form-control" id="nivel_educacion" name="nivel_educacion">
-                            <option value="basica">Básica</option>
-                            <option value="media">Media</option>
-                            <option value="superior">Superior</option>
-                        </select>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero">
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Botón de enviar -->
-                    <div class="d-grid w-100">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                    </div>
-                </form>
+    <div class="container">
+        <h2>Crear Cuenta de Alumno</h2>
+        <!-- Formulario de registro de alumno -->
+        <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST">
+            {% csrf_token %}
+            <!-- Campos personalizados para el registro de alumno -->
+            <div class="form-group">
+                <label for="rut">RUT</label>
+                <input type="text" id="rut" name="rut" required>
             </div>
+            <div class="form-group">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Nombre de Usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+            </div>
+            <div class="form-group">
+                <label for="correo_electronico">Correo Electrónico</label>
+                <input type="email" id="correo_electronico" name="correo_electronico" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" pattern="[0-9]{9}" required>
+            </div>
+            <div class="form-group">
+                <label for="nivel_educacion">Nivel de Educación</label>
+                <select id="nivel_educacion" name="nivel_educacion">
+                    <option value="basica">Básica</option>
+                    <option value="media">Media</option>
+                    <option value="superior">Superior</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="genero">Género</label>
+                <select id="genero" name="genero">
+                    {% for genero in generos %}
+                    <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Botón de enviar -->
+            <div class="form-group">
+                <input type="submit" value="Crear Cuenta">
+            </div>
+        </form>
+        <!-- Enlace para iniciar sesión si ya tiene cuenta -->
+        <div class="form-group">
+            <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
         </div>
+        <div id="idMensajes">
+            {% if mensaje %}
+            <div class="message">{{ mensaje }}</div>
+            {% endif %}
+        </div>
+    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>

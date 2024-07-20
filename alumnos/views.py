@@ -16,27 +16,27 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
         print(f'Logged in user: {user.username}, user_type: {user.user_type}')
-        if user.user_type == 'admin':
-            return reverse_lazy('menu')  
-        elif user.user_type == 'profesor':
+        if user.user_type == 1:  # Admin
+            return reverse_lazy('menu')
+        elif user.user_type == 2:  # Profesor
             return reverse_lazy('profesor_menu')
-        elif user.user_type == 'alumno':
+        elif user.user_type == 3:  # Alumno
             return reverse_lazy('alumno_menu')
-        elif user.user_type == 'tutor':
-            return reverse_lazy('menu_tutor')
+        elif user.user_type == 4:  # Tutor
+            return reverse_lazy('tutor_menu')
         else:
             return reverse_lazy('home')
 
 @login_required
 def menu(request):
     print(f'User: {request.user.username}, User Type: {request.user.user_type}')
-    if request.user.user_type == 'admin':  # Admin
+    if request.user.user_type == 1:  # Admin
         return render(request, 'admin_portal/menu.html')
-    elif request.user.user_type == 'profesor':  # Profesor
+    elif request.user.user_type == 2:  # Profesor
         return render(request, 'user_profesor/menu_prof.html')
-    elif request.user.user_type == 'alumno':  # Estudiante
+    elif request.user.user_type == 3:  # Alumno
         return render(request, 'students_portal/menu_stud.html')
-    elif request.user.user_type == 'tutor':  # Tutor
+    elif request.user.user_type == 4:  # Tutor
         return render(request, 'tutor_portal/menu_tutor.html')
     else:
         return redirect('home')
@@ -47,7 +47,12 @@ def cerrar(request):
 def home(request):
     return render(request, 'alumnos/home.html')
 
-    
+def cerrar(request):
+    return render(request, 'alumnos/home.html')
+
+def home(request):
+    return render(request, 'alumnos/home.html')
+
 def planes(request):
     context = {}
     return render(request, 'alumnos/planes.html', context)
@@ -76,7 +81,7 @@ def opcion_user(request):
 def regis_alum(request):
     generos = Genero.objects.all()
     data = {
-        'generos':generos
+        'generos': generos
     }
     if request.method == 'POST':
         try:
@@ -88,48 +93,55 @@ def regis_alum(request):
             correo_electronico = request.POST['correo_electronico']
             telefono = request.POST['telefono']
             genero_id = request.POST['genero']
-            usuario = request.POST['username']
-            paswd = request.POST['password']
+            username = request.POST['username']
+            password = request.POST['password']
+            
+            # Verificar si el username ya existe
+            if CustomUser.objects.filter(username=username).exists():
+                return JsonResponse({"success": False, "message": "El nombre de usuario ya existe. Por favor elija otro nombre de usuario."})
+
             genero = Genero.objects.get(id_genero=genero_id)
-            c = CustomUser()
-            c.first_name = nombre
-            c.last_name = nombre
-            c.email = correo_electronico
-            c.username = usuario
-            c.user_type = 3
-            c.set_password(paswd)
-            c.save()
+
+            # Crear el usuario
+            c = CustomUser.objects.create_user(username=username, password=password, user_type=CustomUser.ALUMNO, email=correo_electronico)
+
+            # Asignar el grupo "Alumno" al usuario
             group = Group.objects.get(name='Alumno')
             c.groups.add(group)
+
+            # Crear el alumno
             Alumno.objects.create(
-                nombre=c.first_name,
-                username = c.username,
+                nombre=nombre,
+                username=c.username,
                 rut=rut,
                 nivel_educacion=nivel_educacion,
                 direccion=direccion,
                 fecha_nacimiento=fecha_nacimiento,
-                correo_electronico=c.email,
+                correo_electronico=correo_electronico,
                 telefono=telefono,
                 genero=genero
             )
-            messages.success(request, "Registrado Correctamente")
-            return render(request, 'alumnos/regis_alum.html', data)
+
+            return JsonResponse({"success": True, "message": "Alumno registrado exitosamente."})
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
 
     return render(request, 'alumnos/regis_alum.html', data)
 
 #REGISTRO DE PROFESORES
+
 def regis_prof(request):
     generos = Genero.objects.all()
+    especialidades = Especialidad.objects.all()
     data = {
-        'generos':generos
+        'generos': generos,
+        'especialidades': especialidades
     }
     if request.method == 'POST':
         try:
             nombre = request.POST['nombre']
             rut = request.POST['rut']
-            nivel_educacion = request.POST['nivel_educacion']
+            especialidad_id = request.POST['especialidad']
             direccion = request.POST['direccion']
             fecha_nacimiento = request.POST['fecha_nacimiento']
             correo_electronico = request.POST['correo_electronico']
@@ -138,27 +150,36 @@ def regis_prof(request):
             usuario = request.POST['username']
             paswd = request.POST['password']
             genero = Genero.objects.get(id_genero=genero_id)
-            c = CustomUser()
+            especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
+
+            # Crear el usuario
+            c = CustomUser.objects.create_user(
+                username=usuario,
+                password=paswd,
+                user_type=CustomUser.PROFESOR,
+                email=correo_electronico
+            )
             c.first_name = nombre
             c.last_name = nombre
-            c.email = correo_electronico
-            c.username = usuario
-            c.user_type = 2
-            c.set_password(paswd)
-            c.save()            
+            c.save()
+
+            # Asignar el grupo "Profesor" al usuario
+            group, created = Group.objects.get_or_create(name='Profesor')
+            c.groups.add(group)
+
+            # Crear el profesor
             Profesor.objects.create(
-                nombre=c.first_name,
-                username = c.username,
+                nombre=nombre,
+                username=usuario,
                 rut=rut,
-                especialidad=nivel_educacion,
+                especialidad=especialidad,
                 direccion=direccion,
                 fecha_nacimiento=fecha_nacimiento,
-                correo_electronico=c.email,
+                correo_electronico=correo_electronico,
                 telefono=telefono,
                 genero=genero
             )
-            messages.success(request, "Registrado Correctamente")
-            return render(request, 'alumnos/regis_prof.html', data)
+            return JsonResponse({"success": True, "message": "Profesor registrado exitosamente."})
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
     return render(request, 'alumnos/regis_prof.html', data)
@@ -168,13 +189,13 @@ def regis_prof(request):
 def regis_tutor(request):
     generos = Genero.objects.all()
     data = {
-        'generos':generos
+        'generos': generos
     }
     if request.method == 'POST':
         try:
             nombre = request.POST['nombre']
             rut = request.POST['rut']
-            nivel_educacion = request.POST['nivel_educacion']
+            nivel_educacion = request.POST.get('nivel_educacion', '')  # Opcional para tutor
             direccion = request.POST['direccion']
             fecha_nacimiento = request.POST['fecha_nacimiento']
             correo_electronico = request.POST['correo_electronico']
@@ -188,24 +209,25 @@ def regis_tutor(request):
             c.last_name = nombre
             c.email = correo_electronico
             c.username = usuario
-            c.user_type = 4
+            c.user_type = CustomUser.TUTOR
             c.set_password(paswd)
-            c.save()            
+            c.save()
+            group, created = Group.objects.get_or_create(name='Tutor')
+            c.groups.add(group)
             Tutor.objects.create(
                 nombre=c.first_name,
-                username = c.username,
-                rut=rut,                
+                username=c.username,
+                rut=rut,
                 direccion=direccion,
                 fecha_nacimiento=fecha_nacimiento,
                 correo_electronico=c.email,
                 telefono=telefono,
                 genero=genero
             )
-            messages.success(request, "Registrado Correctamente")
-            return render(request, 'alumnos/regis_tutor.html', data)
+            return JsonResponse({"success": True, "message": "Registrado Correctamente"})
         except Exception as e:
             return JsonResponse({"success": False, "message": str(e)})
-    return render(request, 'alumnos/regis_tutor.html', data)    
+    return render(request, 'alumnos/regis_tutor.html', data) 
 
 #Crud Alumnos
 
@@ -321,43 +343,6 @@ def alumnos_Update(request):
         return render(request, 'alumnos/alumnos_list.html', context)
 
 
-def alumnos_reg(request):
-    if request.method == 'POST':
-        try:
-            nombre = request.POST['nombre']
-            rut = request.POST['rut']
-            nivel_educacion = request.POST['nivel_educacion']
-            direccion = request.POST['direccion']
-            fecha_nacimiento = request.POST['fecha_nacimiento']
-            correo_electronico = request.POST['correo_electronico']
-            telefono = request.POST['telefono']
-            genero_id = request.POST['genero']
-            username = request.POST['username']
-            password = request.POST['password']
-
-            genero = Genero.objects.get(id_genero=genero_id)
-
-            alumno = Alumno(
-                nombre=nombre,
-                rut=rut,
-                nivel_educacion=nivel_educacion,
-                direccion=direccion,
-                fecha_nacimiento=fecha_nacimiento,
-                correo_electronico=correo_electronico,
-                telefono=telefono,
-                genero=genero,
-                username=username,
-            )
-            alumno.set_password(password)  # Esto guarda la contraseña de forma segura
-            alumno.save()
-
-            return JsonResponse({"success": True, "message": "Alumno registrado exitosamente."})
-        except Exception as e:
-            return JsonResponse({"success": False, "message": str(e)})
-
-    generos = Genero.objects.all()
-    return render(request, 'alumnos/regis_alum.html', {'generos': generos})
-
 #CRUD PROFESOR
 
 def crud_profesor(request):
@@ -379,11 +364,21 @@ def profesor_Add(request):
             username = request.POST['username']
             password = request.POST['password']
 
+            # Verificar si el username ya existe
+            if CustomUser.objects.filter(username=username).exists():
+                return JsonResponse({"success": False, "message": "El nombre de usuario ya existe. Por favor elija otro nombre de usuario."})
+
             genero = Genero.objects.get(id_genero=genero_id)
             especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
 
+            # Crear el usuario
             c = CustomUser.objects.create_user(username=username, password=password, user_type='profesor', email=correo_electronico)
 
+            # Asignar el grupo "Profesor" al usuario
+            group, created = Group.objects.get_or_create(name='Profesor')
+            c.groups.add(group)
+
+            # Crear el profesor
             Profesor.objects.create(
                 nombre=nombre,
                 rut=rut,
@@ -403,6 +398,7 @@ def profesor_Add(request):
     generos = Genero.objects.all()
     especialidades = Especialidad.objects.all()
     return render(request, 'alumnos/profesor_add.html', {'generos': generos, 'especialidades': especialidades})
+    
 
 def profesor_del(request, pk):
     context = {}

@@ -18,67 +18,73 @@
     
 </head>
 <body>
-    <!--Navbar-->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
-                LBWUS
-            </a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'menu' %}">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'planes_adm' %}">Planes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'crud' %}">Usuarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'nosotros_adm' %}">Nosotros</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'contactos_adm' %}">Contactos</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {% if user.is_authenticated %}
+        <!--Navbar-->
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand me-auto" href="#">
+                    <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
+                        class="d-inline-block align-text-top">
+                    LBWUS
+                </a>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'menu' %}">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2" href="{% url 'crud_clases' %}">Clases</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2" href="{% url 'crud' %}">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2" href="{% url 'crud_inscripciones' %}">Inscripción</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2" href="{% url 'crud_profesor' %}">Profesores</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    {% if user.is_authenticated %}
                                     {{ user.username }}
-                                {% else %}
+                                    {% else %}
                                     Login
-                                {% endif %}
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
-                                {% if user.is_authenticated %}
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
+                                    {% if user.is_authenticated %}
                                     <!-- Enlace de cierre de sesión utilizando un formulario -->
-                                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
+                                    <a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar
+                                        sesión</a>
                                     <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
                                         {% csrf_token %}
                                     </form>
-                                {% else %}
+                                    {% else %}
                                     <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
-                                {% endif %}
-                            </div>
-                        </li>                        
-
-            <!-- Botón para cambiar el tema con iconos -->
-            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                <i class="bi bi-sun"></i>  <!-- Icono predeterminado para el tema claro -->
-            </button>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
-    <!--End Navbar-->
+                                    {% endif %}
+                                </div>
+                            </li>
+    
+                            <!-- Botón para cambiar el tema con iconos -->
+                            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
+                            </button>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                    </div>
+        </nav>
+        <!--End Navbar-->
 
     <div class="container-fluid px-0 my-5"> <!-- px-0 quita el padding en el eje x -->
         <div class="row g-0"> <!-- g-0 quita el gutter (espacio entre columnas) -->

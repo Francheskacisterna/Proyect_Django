@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Genero, Tutor, Alumno, Profesor, Clase, Inscripcion, CustomUser
+from .models import Genero, Tutor, Alumno, Profesor, Clase, Inscripcion, Especialidad, CustomUser
 
 # Register your models here.
 @admin.register(CustomUser)
@@ -13,7 +13,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('user_type',)}),
     )
 
-
+admin.site.register(Especialidad)
 admin.site.register(Genero)
 admin.site.register(Tutor)
 admin.site.register(Alumno)

@@ -3,7 +3,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 
-# Definición del CustomUserManager
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -18,13 +17,16 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, password, **extra_fields)
 
-# Definición del CustomUser
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    ADMIN = 1
+    PROFESOR = 2
+    ALUMNO = 3
+    TUTOR = 4
     USER_TYPE_CHOICES = (
-        ('admin', 'Admin'),
-        ('profesor', 'Profesor'),
-        ('alumno', 'Alumno'),
-        ('tutor', 'Tutor'),
+        (ADMIN, 'Admin'),
+        (PROFESOR, 'Profesor'),
+        (ALUMNO, 'Alumno'),
+        (TUTOR, 'Tutor'),
     )
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
@@ -33,7 +35,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
-    user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='alumno')
+    user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=ALUMNO)
 
     objects = CustomUserManager()
 
@@ -51,7 +53,7 @@ class Genero(models.Model):
 
     def __str__(self):
         return self.descripcion
-
+        
 class Especialidad(models.Model):
     id_especialidad = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=100)
