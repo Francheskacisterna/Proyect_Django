@@ -86,17 +86,21 @@
                 </div>
                 <div class="form-group">
                     <label for="especialidad">Especialidad:</label>
-                    <input type="text" id="especialidad" name="especialidad" value="{{ profesor.especialidad }}">
+                    <select id="especialidad" name="especialidad" required>
+                        {% for especialidad in especialidades %}
+                            <option value="{{ especialidad.id }}" {% if especialidad.id == profesor.especialidad.id %}selected{% endif %}>{{ especialidad.descripcion }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="fecha_nacimiento">Fecha Nac.:</label>
                     <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ profesor.fecha_nacimiento|date:'Y-m-d' }}">
-                </div>
+                </div>                
                 <div class="form-group">
                     <label for="genero">Género:</label>
                     <select id="genero" name="genero">
                         {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}" {% if genero.id_genero == profesor.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
+                            <option value="{{ genero.id }}" {% if genero.id == profesor.genero.id %}selected{% endif %}>{{ genero.descripcion }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -125,6 +129,6 @@
         <div class="form-group">
             <a href="{% url 'crud_profesor' %}">Volver</a>
         </div>
-    </div>
+    </div>     
 </body>
 </html>

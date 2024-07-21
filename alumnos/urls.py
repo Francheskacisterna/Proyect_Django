@@ -5,7 +5,7 @@ from .views import (
     CustomLoginView, home, contactos, nosotros, planes, servicios, simulador, opcion_user,
     regis_prof, regis_alum, regis_tutor, crud, alumnos_Add, alumnos_del, alumnos_findEdit, alumnos_Update, crud_profesor, profesor_Add, profesor_del, profesor_findEdit, profesorUpdate, lista_combinada,
     crud_clases, clases_Add, clases_del, clases_findEdit, clases_Update, crud_inscripciones, inscripcion_Add,
-    inscripcion_del, inscripcion_findEdit, inscripcion_update, crud_tutor, tutor_Add, tutor_del, tutor_findEdit, tutor_Update
+    inscripcion_del, inscripcion_findEdit, inscripcion_update, crud_tutor, tutor_Add, tutor_del, tutor_findEdit, tutor_Update, pagar
 )
 
 urlpatterns = [
@@ -59,4 +59,5 @@ urlpatterns = [
     
 
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('pagar/', pagar, name='pagar'),
 ]

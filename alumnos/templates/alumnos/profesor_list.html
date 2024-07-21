@@ -157,62 +157,60 @@
                 </div>
     </nav>
     <!--End Navbar-->
-    <!--End Navbar-->
-        <h1>Lista de Profesores</h1>
-        <div id="idMensajes">
-            {% if mensaje %}
-            <div class="message">{{ mensaje }}</div>
-            {% endif %}
-        </div>
-        <div class="button-container">
-            <button type="button">
-                <a href="{% url 'profesor_Add' %}">Agregar</a>
-            </button>
-        </div>
-        <table>
-            {% if profesores %}
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>RUT</th>
-                    <th>Especialidad</th>
-                    <th>Dirección</th>
-                    <th>Fecha de Nacimiento</th>
-                    <th>Correo Electrónico</th>
-                    <th>Teléfono</th>
-                    <th>Género</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for profesor in profesores %}
-                <tr>
-                    <td>{{ profesor.id_profesor }}</td>
-                    <td>{{ profesor.nombre }}</td>
-                    <td>{{ profesor.rut }}</td>
-                    <td>{{ profesor.especialidad.descripcion }}</td>
-                    <td>{{ profesor.direccion }}</td>
-                    <td>{{ profesor.fecha_nacimiento }}</td>
-                    <td>{{ profesor.correo_electronico }}</td>
-                    <td>{{ profesor.telefono }}</td>
-                    <td>{{ profesor.genero.descripcion }}</td>
-                    <td class="actions">
-                        <a href="{% url 'profesor_del' pk=profesor.id_profesor %}">Eliminar</a>
-                        <a href="{% url 'profesor_findEdit' pk=profesor.id_profesor %}">Modificar</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            {% else %}
-            <tbody>
-                <tr>
-                    <td colspan="10">No hay profesores disponibles.</td>
-                </tr>
-            </tbody>
-            {% endif %}
-        </table>
-        
+    <h1>Lista de Profesores</h1>
+    <div id="idMensajes">
+        {% if mensaje %}
+        <div class="message">{{ mensaje }}</div>
+        {% endif %}
+    </div>
+    <div class="button-container">
+        <button type="button">
+            <a href="{% url 'profesor_Add' %}">Agregar</a>
+        </button>
+    </div>
+    <table>
+        {% if profesores %}
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>RUT</th>
+                <th>Especialidad</th>
+                <th>Dirección</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Correo Electrónico</th>
+                <th>Teléfono</th>
+                <th>Género</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profesor in profesores %}
+            <tr>
+                <td>{{ profesor.id_profesor }}</td>
+                <td>{{ profesor.nombre }}</td>
+                <td>{{ profesor.rut }}</td>
+                <td>{{ profesor.especialidad.descripcion }}</td>
+                <td>{{ profesor.direccion }}</td>
+                <td>{{ profesor.fecha_nacimiento|date:'Y-m-d' }}</td>
+                <td>{{ profesor.correo_electronico }}</td>
+                <td>{{ profesor.telefono }}</td>
+                <td>{{ profesor.genero.descripcion }}</td>
+                <td class="actions">
+                    <a href="{% url 'profesor_del' pk=profesor.id_profesor %}">Eliminar</a>
+                    <a href="{% url 'profesor_findEdit' pk=profesor.id_profesor %}">Modificar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tbody>
+            <tr>
+                <td colspan="10">No hay profesores disponibles.</td>
+            </tr>
+        </tbody>
+        {% endif %}
+    </table>
     <!--Inicio Footer-->
     <footer class="footer">
         <div class="container container-footer">

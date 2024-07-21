@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar</title>
+    <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5">Página de Pago</h1>
+        <p class="lead">Complete los detalles de pago para finalizar su compra.</p>
+
+        <!-- Formulario de pago -->
+        <form>
+            <div class="mb-3">
+                <label for="cardNumber" class="form-label">Número de Tarjeta</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9101 1121">
+            </div>
+            <div class="mb-3">
+                <label for="expiryDate" class="form-label">Fecha de Expiración</label>
+                <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA">
+            </div>
+            <div class="mb-3">
+                <label for="cvv" class="form-label">CVV</label>
+                <input type="text" class="form-control" id="cvv" placeholder="123">
+            </div>
+            <div class="mb-3">
+                <label for="cardName" class="form-label">Nombre en la Tarjeta</label>
+                <input type="text" class="form-control" id="cardName" placeholder="Nombre completo">
+            </div>
+            <button type="submit" class="btn btn-primary">Pagar</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

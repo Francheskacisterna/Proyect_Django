@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.utils.dateparse import parse_date
 
 # Create your views here.
 
@@ -77,7 +78,13 @@ def opcion_user(request):
     context = {}
     return render(request, 'alumnos/opcion_user.html', context)
 
+@login_required
+def pagar(request):
+    context = {}
+    return render(request, 'alumnos/opcion_user.html', context)
+
 #REGISTRO DE ALUMNOS
+
 def regis_alum(request):
     generos = Genero.objects.all()
     data = {
@@ -152,15 +159,19 @@ def regis_prof(request):
             genero = Genero.objects.get(id_genero=genero_id)
             especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
 
+            # Verificar si el nombre de usuario ya existe
+            if CustomUser.objects.filter(username=usuario).exists():
+                messages.error(request, "El nombre de usuario ya existe. Por favor elija otro nombre de usuario.")
+                return render(request, 'alumnos/regis_prof.html', data)
+
             # Crear el usuario
-            c = CustomUser.objects.create_user(
-                username=usuario,
-                password=paswd,
-                user_type=CustomUser.PROFESOR,
-                email=correo_electronico
-            )
+            c = CustomUser()
             c.first_name = nombre
             c.last_name = nombre
+            c.email = correo_electronico
+            c.username = usuario
+            c.user_type = CustomUser.PROFESOR
+            c.set_password(paswd)
             c.save()
 
             # Asignar el grupo "Profesor" al usuario
@@ -169,19 +180,22 @@ def regis_prof(request):
 
             # Crear el profesor
             Profesor.objects.create(
-                nombre=nombre,
-                username=usuario,
+                nombre=c.first_name,
+                username=c.username,
                 rut=rut,
                 especialidad=especialidad,
                 direccion=direccion,
                 fecha_nacimiento=fecha_nacimiento,
-                correo_electronico=correo_electronico,
+                correo_electronico=c.email,
                 telefono=telefono,
                 genero=genero
             )
-            return JsonResponse({"success": True, "message": "Profesor registrado exitosamente."})
+
+            messages.success(request, "Profesor registrado exitosamente.")
+            return HttpResponseRedirect('/alumnos/registro_profesor')  # Redirigir después del registro
         except Exception as e:
-            return JsonResponse({"success": False, "message": str(e)})
+            messages.error(request, str(e))
+            return render(request, 'alumnos/regis_prof.html', data)
     return render(request, 'alumnos/regis_prof.html', data)
 
 
@@ -403,33 +417,31 @@ def profesor_Add(request):
 def profesor_del(request, pk):
     context = {}
     try:
-        profesor = Profesor.objects.get(rut=pk)
+        profesor = Profesor.objects.get(id_profesor=pk)
         profesor.delete()
         mensaje = "Bien, datos eliminados..."
-        profesores = Profesor.objects.all()
-        context = {'profesores': profesores, 'mensaje': mensaje}
-        return render(request, 'alumnos/profesor_list.html', context)
-    except:
-        mensaje = "Error, rut no existe"
-        profesores = Profesor.objects.all()
-        context = {'profesores': profesores, 'mensaje': mensaje}
-        return render(request, 'alumnos/profesor_list.html', context)
+    except Profesor.DoesNotExist:
+        mensaje = "Error, el profesor no existe"
+
+    profesores = Profesor.objects.all()
+    context = {'profesores': profesores, 'mensaje': mensaje}
+    return render(request, 'alumnos/profesor_list.html', context)
+
 
 def profesor_findEdit(request, pk):
-    profesores = Profesor.objects.filter(rut=pk)
-    generos = Genero.objects.all()
-    especialidades = Especialidad.objects.all()
-
-    if profesores.count() == 1:
-        profesor = profesores.first()
+    context = {}
+    try:
+        profesor = Profesor.objects.get(id_profesor=pk)
+        generos = Genero.objects.all()
+        especialidades = Especialidad.objects.all()
         context = {'profesor': profesor, 'generos': generos, 'especialidades': especialidades}
         return render(request, 'alumnos/profesor_edit.html', context)
-    elif profesores.count() > 1:
-        context = {'profesores': profesores, 'generos': generos, 'especialidades': especialidades}
-        return render(request, 'alumnos/multiple_profesores.html', context)
-    else:
-        context = {'mensaje': "Error, rut no existe..."}
+    except Profesor.DoesNotExist:
+        mensaje = "Error, el profesor no existe"
+        profesores = Profesor.objects.all()
+        context = {'profesores': profesores, 'mensaje': mensaje}
         return render(request, 'alumnos/profesor_list.html', context)
+
 
 def profesorUpdate(request):
     if request.method == "POST":
@@ -439,25 +451,32 @@ def profesorUpdate(request):
         profesor.nombre = request.POST.get("nombre")
         profesor.rut = request.POST.get("rut")
         profesor.direccion = request.POST.get("direccion")
-        profesor.fecha_nacimiento = request.POST.get("fecha_nacimiento")
+        fecha_nacimiento_str = request.POST.get("fecha_nacimiento")
+        
+        # Asegurarse de que la fecha está en el formato correcto
+        if fecha_nacimiento_str:
+            profesor.fecha_nacimiento = parse_date(fecha_nacimiento_str)
+
         profesor.telefono = request.POST.get("telefono")
         profesor.correo_electronico = request.POST.get("correo_electronico")
+        
         genero_id = request.POST.get("genero")
         especialidad_id = request.POST.get("especialidad")
-        profesor.genero = Genero.objects.get(id_genero=genero_id)
-        profesor.especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
+
+        if genero_id:
+            profesor.genero = Genero.objects.get(id=genero_id)
+        if especialidad_id:
+            profesor.especialidad = Especialidad.objects.get(id=especialidad_id)
 
         profesor.save()
 
-        generos = Genero.objects.all()
-        especialidades = Especialidad.objects.all()
+        mensaje = "Ok, datos actualizados..."
+        profesores = Profesor.objects.all()
         context = {
-            'mensaje': "Ok, datos actualizados...",
-            'generos': generos,
-            'especialidades': especialidades,
-            'profesor': profesor
+            'profesores': profesores,
+            'mensaje': mensaje
         }
-        return render(request, 'alumnos/profesor_edit.html', context)
+        return render(request, 'alumnos/profesor_list.html', context)
     else:
         profesores = Profesor.objects.all()
         context = {'profesores': profesores}
