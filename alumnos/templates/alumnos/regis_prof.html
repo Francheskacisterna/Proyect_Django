@@ -106,8 +106,10 @@
             <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
             <div class="col bg-white p-5 rounded-end">
                 <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
-                <form id="formProfreg" action="{% url 'regis_prof' %}" method="POST">
+                <!-- Formulario de registro de profesor -->
+                <form id="formProfreg" action="{% url 'regis_prof' %}" method="POST">                    
                     {% csrf_token %}
+                    <!-- Campos personalizados para el registro de profesor -->
                     <div class="mb-4 w-100">
                         <label for="rut" class="form-label">RUT</label>
                         <input type="text" class="form-control" id="rut" name="rut" required>
@@ -165,31 +167,34 @@
                         </div>
                     </div>
                     <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero">
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-4 w-100">
                         <label for="especialidad" class="form-label">Especialidad</label>
-                        <select class="form-control" id="especialidad" name="especialidad">
+                        <select class="form-control" id="especialidad" name="especialidad" required>
                             {% for especialidad in especialidades %}
                             <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="mb-4 w-100">
+                        <label for="genero" class="form-label">Género</label>
+                        <select class="form-control" id="genero" name="genero" required>
+                            {% for genero in generos %}
+                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!-- Botón de enviar -->
                     <div class="d-grid w-100">
                         <button type="submit" class="btn btn-primary">Crear Cuenta</button>
                     </div>
                 </form>
+                <!-- Enlace para iniciar sesión si ya tiene cuenta -->
                 <div class="my-3 text-center w-100">
                     <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
+     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>

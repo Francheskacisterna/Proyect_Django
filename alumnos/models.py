@@ -3,6 +3,13 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission
 
+
+# Definir constantes para los tipos de usuario
+USER_TYPE_ADMIN = 1
+USER_TYPE_PROFESOR = 2
+USER_TYPE_AlUMNO = 3
+USER_TYPE_TUTOR = 4
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:

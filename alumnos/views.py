@@ -156,45 +156,54 @@ def regis_prof(request):
             genero_id = request.POST['genero']
             usuario = request.POST['username']
             paswd = request.POST['password']
-            genero = Genero.objects.get(id_genero=genero_id)
-            especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
+            
+            print(f"Nombre: {nombre}, RUT: {rut}, Especialidad ID: {especialidad_id}, Dirección: {direccion}")
+            print(f"Fecha Nacimiento: {fecha_nacimiento}, Correo: {correo_electronico}, Teléfono: {telefono}")
+            print(f"Género ID: {genero_id}, Usuario: {usuario}, Contraseña: {paswd}")
 
             # Verificar si el nombre de usuario ya existe
             if CustomUser.objects.filter(username=usuario).exists():
                 messages.error(request, "El nombre de usuario ya existe. Por favor elija otro nombre de usuario.")
                 return render(request, 'alumnos/regis_prof.html', data)
 
+            genero = Genero.objects.get(id_genero=genero_id)
+            especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
+
             # Crear el usuario
-            c = CustomUser()
-            c.first_name = nombre
-            c.last_name = nombre
-            c.email = correo_electronico
-            c.username = usuario
-            c.user_type = CustomUser.PROFESOR
-            c.set_password(paswd)
-            c.save()
+            c = CustomUser.objects.create_user(
+                username=usuario, 
+                password=paswd, 
+                email=correo_electronico, 
+                first_name=nombre, 
+                last_name=nombre, 
+                user_type=CustomUser.PROFESOR
+            )
+            print(f"Usuario creado: {c.username}")
 
             # Asignar el grupo "Profesor" al usuario
             group, created = Group.objects.get_or_create(name='Profesor')
             c.groups.add(group)
+            print(f"Grupo asignado: {group.name}")
 
             # Crear el profesor
             Profesor.objects.create(
-                nombre=c.first_name,
+                nombre=nombre,
                 username=c.username,
                 rut=rut,
                 especialidad=especialidad,
                 direccion=direccion,
                 fecha_nacimiento=fecha_nacimiento,
-                correo_electronico=c.email,
+                correo_electronico=correo_electronico,
                 telefono=telefono,
                 genero=genero
             )
+            print("Profesor creado exitosamente")
 
             messages.success(request, "Profesor registrado exitosamente.")
             return HttpResponseRedirect('/alumnos/registro_profesor')  # Redirigir después del registro
         except Exception as e:
-            messages.error(request, str(e))
+            messages.error(request, f"Error al registrar el profesor: {str(e)}")
+            print(f"Error: {str(e)}")
             return render(request, 'alumnos/regis_prof.html', data)
     return render(request, 'alumnos/regis_prof.html', data)
 
@@ -386,7 +395,7 @@ def profesor_Add(request):
             especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
 
             # Crear el usuario
-            c = CustomUser.objects.create_user(username=username, password=password, user_type='profesor', email=correo_electronico)
+            c = CustomUser.objects.create_user(username=username, password=password, user_type=USER_TYPE_PROFESOR, email=correo_electronico)
 
             # Asignar el grupo "Profesor" al usuario
             group, created = Group.objects.get_or_create(name='Profesor')
@@ -412,6 +421,7 @@ def profesor_Add(request):
     generos = Genero.objects.all()
     especialidades = Especialidad.objects.all()
     return render(request, 'alumnos/profesor_add.html', {'generos': generos, 'especialidades': especialidades})
+
     
 
 def profesor_del(request, pk):
@@ -443,34 +453,43 @@ def profesor_findEdit(request, pk):
         return render(request, 'alumnos/profesor_list.html', context)
 
 
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from .models import Profesor, Genero, Especialidad
+from django.utils.dateparse import parse_date
+
 def profesorUpdate(request):
     if request.method == "POST":
-        id_profesor = request.POST.get('id_profesor')
-        profesor = get_object_or_404(Profesor, pk=id_profesor)
+        try:
+            id_profesor = request.POST.get('id_profesor')
+            profesor = get_object_or_404(Profesor, pk=id_profesor)
 
-        profesor.nombre = request.POST.get("nombre")
-        profesor.rut = request.POST.get("rut")
-        profesor.direccion = request.POST.get("direccion")
-        fecha_nacimiento_str = request.POST.get("fecha_nacimiento")
-        
-        # Asegurarse de que la fecha está en el formato correcto
-        if fecha_nacimiento_str:
-            profesor.fecha_nacimiento = parse_date(fecha_nacimiento_str)
+            profesor.nombre = request.POST.get("nombre")
+            profesor.rut = request.POST.get("rut")
+            profesor.direccion = request.POST.get("direccion")
+            fecha_nacimiento_str = request.POST.get("fecha_nacimiento")
 
-        profesor.telefono = request.POST.get("telefono")
-        profesor.correo_electronico = request.POST.get("correo_electronico")
-        
-        genero_id = request.POST.get("genero")
-        especialidad_id = request.POST.get("especialidad")
+            # Asegurarse de que la fecha está en el formato correcto
+            if fecha_nacimiento_str:
+                profesor.fecha_nacimiento = parse_date(fecha_nacimiento_str)
 
-        if genero_id:
-            profesor.genero = Genero.objects.get(id=genero_id)
-        if especialidad_id:
-            profesor.especialidad = Especialidad.objects.get(id=especialidad_id)
+            profesor.telefono = request.POST.get("telefono")
+            profesor.correo_electronico = request.POST.get("correo_electronico")
+            
+            genero_id = request.POST.get("genero")
+            especialidad_id = request.POST.get("especialidad")
 
-        profesor.save()
+            if genero_id:
+                profesor.genero = Genero.objects.get(id=genero_id)
+            if especialidad_id:
+                profesor.especialidad = Especialidad.objects.get(id=especialidad_id)
 
-        mensaje = "Ok, datos actualizados..."
+            profesor.save()
+
+            mensaje = "Ok, datos actualizados..."
+        except Exception as e:
+            mensaje = f"Error al actualizar los datos: {str(e)}"
+
         profesores = Profesor.objects.all()
         context = {
             'profesores': profesores,
