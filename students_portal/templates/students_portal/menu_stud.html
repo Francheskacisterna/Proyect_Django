@@ -2,33 +2,26 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'alumnos/img/Logo.png' %}">
+    <link rel="icon" href="{% static 'img/Logo.png' %}">
     <!-- Bootstrap CSS (librerias)-->
     <title>LBWUS</title>
-    {% load static %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </head>
 <body>
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
-                    class="d-inline-block align-text-top">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
                 LBWUS
             </a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -36,13 +29,13 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'menu_stud' %}">Inicio</a>
+                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'home_stud' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="">Plan</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'planes_stud' %}">Planes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="">Clases</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'servicios_stud' %}">Servicios</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'nosotros_stud' %}">Nosotros</a>
@@ -73,17 +66,44 @@
                                 {% endif %}
                             </div>
                         </li>
-
-                        <!-- Botón para cambiar el tema con iconos -->
-                        <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                            <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
-                        </button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+                    </ul>
                 </div>
+            </div>
+            <!-- Botón para cambiar el tema con iconos -->
+            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
+            </button>
+            <!-- Carrito de compras icono y desplegable -->
+            <div class="submenu">
+                <button id="carrito-button" class="btn btn-outline-light ms-2 carrito-icon">
+                    <i class="bi bi-cart-fill"></i> <!-- Icono de carrito de Bootstrap -->
+                    <span id="carrito-count" class="carrito-count">0</span>
+                </button>
+                <div id="carrito" class="carrito-dropdown">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-carrito"></tbody>
+                    </table>
+                    <div class="text-end">
+                        <strong>Total: $<span id="total-carrito">0</span></strong>
+                    </div>
+                    <button id="vaciar-carrito" class="btn btn-danger w-100 mt-2">Vaciar Carrito</button>
+                    <button id="ir-a-pagar" class="btn btn-primary w-100 mt-2">Pagar</button>
+                </div>
+            </div>
+            <!-- Fin Carrito -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </nav>
     <!--End Navbar-->
     <!--Carrusel-->
@@ -137,24 +157,22 @@
         </button>
     </div>
     <!-- fin del carrusel-->
-    <!--Imagen e información -->
 
+    <!--Imagen e información -->
     <section id="about" class="about section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-12 col-12">
                     <div class="about-img">
-                        <img src="{% static 'alumnos/img/about.jpg' %}" alt="img" class="img-fluid">
+                        <img src="{% static 'alumnos/img
+
+/about.jpg' %}" alt="img" class="img-fluid">
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
                     <h2>Learn better with us</h2>
-                    <p> En LBWUS nos preocupamos por ti, te contamos que tenemos más de 10.000 profesionales
-                        especialidados
-                        en todo el territorio nacional. Recuerda que nuestra pagina te contacta con aquellos
-                        profesionales
-                        que se encuentran más cerca de ti. ¡No sufras más! </p>
-                    <a href="{% url 'nosotros' %}" class="btn btn-warning"> Saber más</a>
+                    <p> En LBWUS nos preocupamos por ti, te contamos que tenemos más de 10.000 profesionales especializados en todo el territorio nacional. Recuerda que nuestra página te contacta con aquellos profesionales que se encuentran más cerca de ti. ¡No sufras más! </p>
+                    <a href="{% url 'nosotros' %}" class="btn btn-warning">Saber más</a>
                 </div>
             </div>
         </div>
@@ -168,8 +186,7 @@
             <div class="row">
                 <div class="col-12 text-center pb-5">
                     <h2 class="text-uppercase font-weight-bold">Nuestros Servicios</h2>
-                    <p class="text-secondary">Descubre las características únicas de nuestros planes de estudio y
-                        encuentra la opción perfecta para ti.</p>
+                    <p class="text-secondary">Descubre las características únicas de nuestros planes de estudio y encuentra la opción perfecta para ti.</p>
                 </div>
             </div>
             <!-- Tarjetas de servicios -->
@@ -180,9 +197,7 @@
                         <div class="card-body">
                             <i class="bi bi-star-fill"></i>
                             <h3 class="card-title">Plan Básico</h3>
-                            <p class="lead">Conéctate con educadores destacados y explora una enseñanza básica renovada.
-                                Aprovecha la flexibilidad de clases virtuales o presenciales y empodera tu aprendizaje
-                                desde la comodidad de tu hogar.<br><br></p>
+                            <p class="lead">Conéctate con educadores destacados y explora una enseñanza básica renovada. Aprovecha la flexibilidad de clases virtuales o presenciales y empodera tu aprendizaje desde la comodidad de tu hogar.<br><br></p>
                         </div>
                     </div>
                 </div>
@@ -192,11 +207,8 @@
                         <div class="card-body">
                             <i class="bi bi-star-fill"></i>
                             <h3 class="card-title">Plan Medio</h3>
-                            <p class="lead">Avanza hacia tus metas con nuestro plan intermedio, diseñado para adaptarse
-                                y responder a tus inquietudes educativas. Sea cual sea tu horario, nuestra metodología
-                                flexible se alinea con tu ritmo de vida.</p>
-                            <button class="btn btn-warning text-dark"
-                                onclick="location.href">Simula aquí</button>
+                            <p class="lead">Avanza hacia tus metas con nuestro plan intermedio, diseñado para adaptarse y responder a tus inquietudes educativas. Sea cual sea tu horario, nuestra metodología flexible se alinea con tu ritmo de vida.</p>
+                            <button class="btn btn-warning text-dark">Simula aquí</button>
                         </div>
                     </div>
                 </div>
@@ -206,9 +218,7 @@
                         <div class="card-body">
                             <i class="bi bi-star-fill"></i>
                             <h3 class="card-title">Plan Superior</h3>
-                            <p class="lead">Alcanza la excelencia con nuestro plan superior, impartido por profesionales
-                                de renombre. Un puente hacia el éxito académico con clases online y presenciales que
-                                enriquecerán tu futuro profesional.<br><br></p>
+                            <p class="lead">Alcanza la excelencia con nuestro plan superior, impartido por profesionales de renombre. Un puente hacia el éxito académico con clases online y presenciales que enriquecerán tu futuro profesional.<br><br></p>
                         </div>
                     </div>
                 </div>
@@ -248,86 +258,212 @@
         </div>
         </div>
         </div>
-        <iframe class="map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d212998.2997250683!2d-70.62983129999999!3d-33.47278795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5410425af2f%3A0x8475d53c400f0931!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses-419!2scl!4v1716188053838!5m2!1ses-419!2scl"
-            width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <!--Inicio Footer-->
-        <footer class="footer">
-            <div class="container container-footer">
-                <div class="menu-footer">
-                    <div class="contact-info">
-                        <p class="title-footer">Información de Contacto</p>
-                        <ul>
-                            <li class="infocontact">
-                                Dirección: Pacifico Norte 123 <br> Vernon Rockville, CT 06066
-                            </li>
-                            <li>Teléfono: 123-456-7890</li>
-                            <li>Email: teachers@lbwus.cl</li>
-                        </ul>
-                        <div class="social-icons">
-                            <span class="facebook">
-                                <i class="fa-brands fa-facebook-f"></i>
-                            </span>
-                            <span class="twitter">
-                                <i class="fa-brands fa-twitter"></i>
-                            </span>
-                            <span class="youtube">
-                                <i class="fa-brands fa-youtube"></i>
-                            </span>
-                            <span class="pinterest">
-                                <i class="fa-brands fa-pinterest-p"></i>
-                            </span>
-                            <span class="instagram">
-                                <i class="fa-brands fa-instagram"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="information">
-                        <p class="title-footer">Información</p>
-                        <ul class="infofo">
-                            <li><a href="#">Acerca de Nosotros</a></li>
-                            <li><a href="#">Estado de tus contrataciones</a></li>
-                            <li><a href="#">Políticas de Privacidad</a></li>
-                            <li><a href="#">Términos y condiciones</a></li>
-                            <li><a href="#">Contáctanos</a></li>
-                        </ul>
-                    </div>
-                    <div class="my-account">
-                        <p class="title-footer">Mi cuenta</p>
-                        <ul class="mi-cuenta">
-                            <li><a href="#">Mi cuenta</a></li>
-                            <li><a href="#">Historial de órdenes</a></li>
-                            <li><a href="#">Lista de deseos</a></li>
-                            <li><a href="#">Boletín</a></li>
-                            <li><a href="#">Reembolsos</a></li>
-                        </ul>
-                    </div>
-                    <div class="newsletter">
-                        <p class="title-footer">Boletín informativo</p>
-                        <div class="content">
-                            <p>
-                                Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas
-                                exclusivas.
-                            </p>
-                            <input type="email" placeholder="Ingresa el correo aquí...">
-                            <button>Suscríbete</button>
-                        </div>
+        <iframe class="map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d212998.2997250683!2d-70.62983129999999!3d-33.47278795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c5410425af2f%3A0x8475d53c400f0931!2sSantiago%2C%20Regi%C3%B3n%20Metropolitana!5e0!3m2!1ses-419!2scl!4v1716188053838!5m2!1ses-419!2scl" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+    <!--Inicio Footer-->
+    <footer class="footer">
+        <div class="container container-footer">
+            <div class="menu-footer">
+                <div class="contact-info">
+                    <p class="title-footer">Información de Contacto</p>
+                    <ul>
+                        <li class="infocontact">
+                            Dirección: Pacifico Norte 123 <br> Vernon Rockville, CT 06066
+                        </li>
+                        <li>Teléfono: 123-456-7890</li>
+                        <li>Email: teachers@lbwus.cl</li>
+                    </ul>
+                    <div class="social-icons">
+                        <span class="facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </span>
+                        <span class="twitter">
+                            <i class="fa-brands fa-twitter"></i>
+                        </span>
+                        <span class="youtube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </span>
+                        <span class="pinterest">
+                            <i class="fa-brands fa-pinterest-p"></i>
+                        </span>
+                        <span class="instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </span>
                     </div>
                 </div>
-                <div class="copyright">
-                    <p>
-                        Desarrollando enseñanza para el mundo &copy; 2024
-                    </p>
+                <div class="information">
+                    <p class="title-footer">Información</p>
+                    <ul class="infofo">
+                        <li><a href="#">Acerca de Nosotros</a></li>
+                        <li><a href="#">Estado de tus contrataciones</a></li>
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+                <div class="my-account">
+                    <p class="title-footer">Mi cuenta</p>
+                    <ul class="mi-cuenta">
+                        <li><a href="#">Mi cuenta</a></li>
+                        <li><a href="#">Historial de órdenes</a></li>
+                        <li><a href="#">Lista de deseos</a></li>
+                        <li><a href="#">Boletín</a></li>
+                        <li><a href="#">Reembolsos</a></li>
+                    </ul>
+                </div>
+                <div class="newsletter">
+                    <p class="title-footer">Boletín informativo</p>
+                    <div class="content">
+                        <p>Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas exclusivas.</p>
+                        <input type="email" placeholder="Ingresa el correo aquí...">
+                        <button>Suscríbete</button>
+                    </div>
                 </div>
             </div>
-        </footer>
+            <div class="copyright">
+                <p>Desarrollando enseñanza para el mundo &copy; 2024</p>
+            </div>
+        </div>
+    </footer>
+    <!--Fin Footer-->
 
-        <!--Fin Footer-->
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="{% static 'java/main.js' %}"></script>
-        <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'java/main.js' %}"></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+
+    <!-- JS Personalizado para el carrito de compras -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listaCursosSemanales = document.get
+
+ElementById('lista-cursos-semanales');
+            const listaCursosMensuales = document.getElementById('lista-cursos-mensuales');
+            const tbody = document.querySelector('#lista-carrito');
+            const carritoButton = document.getElementById('carrito-button');
+            const carrito = document.getElementById('carrito');
+            const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+            const pagarCarritoBtn = document.getElementById('ir-a-pagar');
+            const carritoCount = document.getElementById('carrito-count');
+            const totalCarrito = document.getElementById('total-carrito');
+            let articulosCarrito = cargarCarritoDeLocalStorage();
+
+            actualizarCarrito();
+
+            if (listaCursosSemanales) {
+                listaCursosSemanales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'semanal');
+                    }
+                });
+            }
+
+            if (listaCursosMensuales) {
+                listaCursosMensuales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'mensual');
+                    }
+                });
+            }
+
+            if (tbody) {
+                tbody.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('borrar-curso')) {
+                        eliminarCursoDelCarrito(e.target);
+                    }
+                });
+            }
+
+            if (carritoButton) {
+                carritoButton.addEventListener('click', function () {
+                    carrito.style.display = carrito.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+
+            if (vaciarCarritoBtn) {
+                vaciarCarritoBtn.addEventListener('click', function () {
+                    articulosCarrito = [];
+                    guardarCarritoEnLocalStorage();
+                    actualizarCarrito();
+                });
+            }
+
+            if (pagarCarritoBtn) {
+                pagarCarritoBtn.addEventListener('click', function () {
+                    window.location.href = '{% url "pagar" %}';
+                });
+            }
+
+            function agregarCursoAlCarrito(curso, tipo) {
+                const infoCurso = {
+                    id: curso.querySelector('button').getAttribute('data-id'),
+                    titulo: curso.querySelector('.card-title').textContent,
+                    precio: curso.querySelector('.precio').textContent,
+                    cantidad: 1,
+                    tipo: tipo
+                };
+
+                const existe = articulosCarrito.some(curso => curso.id === infoCurso.id);
+                if (existe) {
+                    const cursos = articulosCarrito.map(curso => {
+                        if (curso.id === infoCurso.id) {
+                            curso.cantidad++;
+                            return curso;
+                        } else {
+                            return curso;
+                        }
+                    });
+                    articulosCarrito = [...cursos];
+                } else {
+                    articulosCarrito = [...articulosCarrito, infoCurso];
+                }
+
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function eliminarCursoDelCarrito(e) {
+                const cursoId = e.getAttribute('data-id');
+                articulosCarrito = articulosCarrito.filter(curso => curso.id !== cursoId);
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function cargarCarritoDeLocalStorage() {
+                return JSON.parse(localStorage.getItem('carrito')) || [];
+            }
+
+            function guardarCarritoEnLocalStorage() {
+                localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
+            }
+
+            function actualizarCarrito() {
+                limpiarCarrito();
+                articulosCarrito.forEach(curso => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${curso.titulo}</td>
+                        <td>${curso.precio}</td>
+                        <td>${curso.cantidad}</td>
+                        <td><button class="btn btn-danger borrar-curso" data-id="${curso.id}">X</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                carritoCount.textContent = articulosCarrito.length;
+                totalCarrito.textContent = articulosCarrito.reduce((total, curso) => total + parseFloat(curso.precio) * curso.cantidad, 0).toFixed(2);
+            }
+
+            function limpiarCarrito() {
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
+```

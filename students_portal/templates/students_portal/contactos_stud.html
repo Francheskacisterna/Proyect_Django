@@ -2,58 +2,26 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="{% static 'alumnos/img/Logo.png' %}">
+    <link rel="icon" href="{% static 'img/Logo.png' %}">
     <!-- Bootstrap CSS (librerias)-->
     <title>LBWUS</title>
-    {% load static %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </head>
-<style>
-    .section-fullscreen {
-        min-height: 100vh;
-        /* Esto asegura que la sección tenga al menos el alto de la pantalla */
-        display: flex;
-        align-items: center;
-        /* Centra el contenido verticalmente */
-        justify-content: center;
-        /* Centra el contenido horizontalmente */
-    }
-
-    .about-img {
-        max-width: 50%;
-        /* Ajusta esto según necesites */
-    }
-
-    @media (max-width: 768px) {
-        .about-img {
-            max-width: 100%;
-            margin-bottom: 20px;
-            /* Espacio entre la imagen y el texto en dispositivos móviles */
-        }
-    }
-</style>
-
 <body>
     <!--Navbar-->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
-                    class="d-inline-block align-text-top">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
                 LBWUS
             </a>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -67,7 +35,7 @@
                             <a class="nav-link mx-lg-2" href="{% url 'planes_stud' %}">Planes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'crud' %}">Clases</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'servicios_stud' %}">Servicios</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'nosotros_stud' %}">Nosotros</a>
@@ -98,19 +66,47 @@
                                 {% endif %}
                             </div>
                         </li>
-
-                        <!-- Botón para cambiar el tema con iconos -->
-                        <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                            <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
-                        </button>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
+                    </ul>
                 </div>
+            </div>
+            <!-- Botón para cambiar el tema con iconos -->
+            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
+            </button>
+            <!-- Carrito de compras icono y desplegable -->
+            <div class="submenu">
+                <button id="carrito-button" class="btn btn-outline-light ms-2 carrito-icon">
+                    <i class="bi bi-cart-fill"></i> <!-- Icono de carrito de Bootstrap -->
+                    <span id="carrito-count" class="carrito-count">0</span>
+                </button>
+                <div id="carrito" class="carrito-dropdown">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-carrito"></tbody>
+                    </table>
+                    <div class="text-end">
+                        <strong>Total: $<span id="total-carrito">0</span></strong>
+                    </div>
+                    <button id="vaciar-carrito" class="btn btn-danger w-100 mt-2">Vaciar Carrito</button>
+                    <button id="ir-a-pagar" class="btn btn-primary w-100 mt-2">Pagar</button>
+                </div>
+            </div>
+            <!-- Fin Carrito -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </nav>
     <!--End Navbar-->
+
     <div class="container my-5">
         <!-- Sección de contacto -->
         <div class="row">
@@ -139,6 +135,8 @@
                 <div class="info-form" style="padding-top: 30px;">
                     <form id="contact-form" action="#" method="post" autocomplete="off" class="needs-validation"
                         novalidate>
+                        <!-- se agrega token para que mande el formulario -->                     
+                        {% csrf_token %} 
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" name="nombre"
@@ -186,8 +184,7 @@
         </div>
     </section>
     <!-- Fin Caricaturas -->
-
-    <!--Inicio Footer-->
+    <!-- Inicio Footer -->
     <footer class="footer">
         <div class="container container-footer">
             <div class="menu-footer">
@@ -218,6 +215,7 @@
                         </span>
                     </div>
                 </div>
+
                 <div class="information">
                     <p class="title-footer">Información</p>
                     <ul class="infofo">
@@ -228,41 +226,159 @@
                         <li><a href="#">Contáctanos</a></li>
                     </ul>
                 </div>
+
                 <div class="my-account">
                     <p class="title-footer">Mi cuenta</p>
                     <ul class="mi-cuenta">
                         <li><a href="#">Mi cuenta</a></li>
-                        <li><a href="#">Historial de órdenes</a></li>
+                        <li><a href="#">Historial de ordenes</a></li>
                         <li><a href="#">Lista de deseos</a></li>
                         <li><a href="#">Boletín</a></li>
                         <li><a href="#">Reembolsos</a></li>
                     </ul>
                 </div>
+
                 <div class="newsletter">
                     <p class="title-footer">Boletín informativo</p>
                     <div class="content">
                         <p>
-                            Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas
-                            exclusivas.
+                            Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas exclusivas.
                         </p>
                         <input type="email" placeholder="Ingresa el correo aquí...">
                         <button>Suscríbete</button>
                     </div>
                 </div>
             </div>
+
             <div class="copyright">
-                <p>
-                    Desarrollando enseñanza para el mundo &copy; 2024
-                </p>
+                <p>Desarrollando enseñanza para el mundo &copy; 2024</p>
             </div>
         </div>
     </footer>
-
-    <!--Fin Footer-->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Fin Footer -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'java/main.js' %}"></script>
+    <script src="{% static 'alumnos/java/main.js' %}"></script>
+    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
-</body>
 
+    <!-- JS Personalizado para el carrito de compras -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listaCursosSemanales = document.getElementById('lista-cursos-semanales');
+            const listaCursosMensuales = document.getElementById('lista-cursos-mensuales');
+            const tbody = document.querySelector('#lista-carrito');
+            const carritoButton = document.getElementById('carrito-button');
+            const carrito = document.getElementById('carrito');
+            const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+            const pagarCarritoBtn = document.getElementById('ir-a-pagar');
+            const carritoCount = document.getElementById('carrito-count');
+            const totalCarrito = document.getElementById('total-carrito');
+            let articulosCarrito = cargarCarritoDeLocalStorage();
+
+            actualizarCarrito();
+
+            if (listaCursosSemanales) {
+                listaCursosSemanales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'semanal');
+                    }
+                });
+            }
+
+            if (listaCursosMensuales) {
+                listaCursosMensuales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'mensual');
+                    }
+                });
+            }
+
+            if (tbody) {
+                tbody.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('borrar-curso')) {
+                        eliminarCursoDelCarrito(e.target);
+                    }
+                });
+            }
+
+            if (carritoButton) {
+                carritoButton.addEventListener('click', function () {
+                    carrito.style.display = carrito.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+
+            if (vaciarCarritoBtn) {
+                vaciarCarritoBtn.addEventListener('click', function () {
+                    articulosCarrito = [];
+                    guardarCarritoEnLocalStorage();
+                    actualizarCarrito();
+                });
+            }
+
+            if (pagarCarritoBtn) {
+                pagarCarritoBtn.addEventListener('click', function () {
+                    window.location.href = '{% url "pagar" %}';
+                });
+            }
+
+            function agregarCursoAlCarrito(curso, tipo) {
+                const infoCurso = {
+                    id: curso.querySelector('button').getAttribute('data-id'),
+                    titulo: curso.querySelector('.card-title').textContent,
+                    precio: parseFloat(curso.querySelector('span').textContent.replace('$', '').replace('.', '').replace(',', '.')),
+                    tipo: tipo,
+                    cantidad: 1
+                };
+
+                const existe = articulosCarrito.some(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo);
+                if (existe) {
+                    articulosCarrito = articulosCarrito.map(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo ? { ...curso, cantidad: curso.cantidad + 1 } : curso);
+                } else {
+                    articulosCarrito.push(infoCurso);
+                }
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function eliminarCursoDelCarrito(elemento) {
+                const id = elemento.getAttribute('data-id');
+                articulosCarrito = articulosCarrito.filter(curso => curso.id !== id);
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function actualizarCarrito() {
+                limpiarHTML();
+                articulosCarrito.forEach(curso => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${curso.titulo}</td>
+                        <td>$${curso.precio.toFixed(2)}</td>
+                        <td>${curso.cantidad}</td>
+                        <td><button class="btn btn-danger btn-sm borrar-curso" data-id="${curso.id}">X</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                carritoCount.textContent = articulosCarrito.reduce((total, curso) => total + curso.cantidad, 0);
+                totalCarrito.textContent = articulosCarrito.reduce((total, curso) => total + curso.precio * curso.cantidad, 0).toFixed(2);
+            }
+
+            function limpiarHTML() {
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+            }
+
+            function guardarCarritoEnLocalStorage() {
+                localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
+            }
+
+            function cargarCarritoDeLocalStorage() {
+                return localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : [];
+            }
+        });
+    </script>
+</body>
 </html>

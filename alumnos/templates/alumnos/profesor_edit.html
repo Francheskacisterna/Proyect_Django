@@ -70,98 +70,66 @@
     </style>
 </head>
 <body>
-    <div class="container w-75 bg-primary mt-4 rounded shadow">
-        <div class="row align-items-stretch">
-            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
-            <div class="col bg-white p-5 rounded-end">
-                <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
-                <!-- Formulario de registro de profesor -->
-                <form id="formProfreg" action="{% url 'regis_prof' %}" method="POST">                    
-                    {% csrf_token %}
-                    <!-- Campos personalizados para el registro de profesor -->
-                    <div class="mb-4 w-100">
-                        <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el RUT del Profesor.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el nombre completo.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la dirección.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la fecha de nacimiento.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo electrónico válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="username" class="form-label">Usuario</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un nombre de usuario.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa una contraseña.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un número de teléfono válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="especialidad" class="form-label">Especialidad</label>
-                        <select class="form-control" id="especialidad" name="especialidad" required>
-                            {% for especialidad in especialidades %}
-                            <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero" required>
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Botón de enviar -->
-                    <div class="d-grid w-100">
-                        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-                    </div>
-                </form>
-                <!-- Enlace para iniciar sesión si ya tiene cuenta -->
-                <div class="my-3 text-center w-100">
-                    <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
+    <div class="container">
+        {% if profesor %}
+            <h2>Formulario para Actualizar Datos de Profesor</h2>
+            <form action="{% url 'profesorUpdate' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id_profesor" value="{{ profesor.id_profesor }}">
+                <div class="form-group">
+                    <label for="rut">Rut:</label>
+                    <input type="text" id="rut" name="rut" value="{{ profesor.rut }}" readonly>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" value="{{ profesor.nombre }}">
+                </div>
+                <div class="form-group">
+                    <label for="especialidad">Especialidad:</label>
+                    <select id="especialidad" name="especialidad" required>
+                        {% for especialidad in especialidades %}
+                            <option value="{{ especialidad.id_especialidad }}" {% if especialidad.id_especialidad == profesor.especialidad.id_especialidad %}selected{% endif %}>{{ especialidad.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha Nac.:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ profesor.fecha_nacimiento|date:'Y-m-d' }}">
+                </div>                
+                <div class="form-group">
+                    <label for="genero">Género:</label>
+                    <select id="genero" name="genero">
+                        {% for genero in generos %}
+                            <option value="{{ genero.id_genero }}" {% if genero.id_genero == profesor.genero.id_genero %}selected{% endif %}>{{ genero.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" value="{{ profesor.telefono }}">
+                </div>
+                <div class="form-group">
+                    <label for="correo_electronico">Email:</label>
+                    <input type="email" id="correo_electronico" name="correo_electronico" value="{{ profesor.correo_electronico }}">
+                </div>
+                <div class="form-group">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" value="{{ profesor.direccion }}">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Actualizar">
+                </div>
+            </form>
+        {% endif %}
+        <div id="idMensajes">
+            {% if mensaje %}
+                {{ mensaje }}
+            {% endif %}
         </div>
-    </div>           
+        <div class="form-group">
+            <a href="{% url 'crud_profesor' %}">Volver</a>
+        </div>
+    </div>     
 </body>
 </html>
+

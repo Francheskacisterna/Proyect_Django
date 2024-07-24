@@ -95,17 +95,19 @@
             <div class="col bg-white p-5 rounded-end">
                 <h2 class="fw-bold text-center py-5">Crear Cuenta de Alumno</h2>
                 <!-- Formulario de registro de alumno -->
-                <form id="formAlumnosreg" action="{% url 'regis_alum' %}" method="POST">                    
+                <form id="formAlumnosreg" action="{% url 'regis_alum' %}" method="POST" novalidate>
                     {% csrf_token %}
                     <!-- Campos personalizados para el registro de alumno -->
                     <div class="mb-4 w-100">
                         <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
-                        <div class="invalid-feedback">Por favor ingresa el RUT del alumno.</div>
+                        <input type="text" class="form-control" id="rut" name="rut" pattern="\d{7,8}-[\dkK]{1}" required>
+                        <small class="form-text text-muted">(Ej: 12345678-9)</small>
+                        <div class="invalid-feedback">Por favor ingresa un RUT válido.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        <input type="text" class="form-control" id="nombre" name="nombre" minlength="10" required>
+                        <small class="form-text text-muted">Mínimo 10 caracteres</small>
                         <div class="invalid-feedback">Por favor ingresa el nombre completo.</div>
                     </div>
                     <div class="mb-4 w-100">
@@ -115,8 +117,8 @@
                     </div>
                     <div class="mb-4 w-100">
                         <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">Por favor ingresa la fecha de nacimiento.</div>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required onchange="checkAge()">
+                        <div class="invalid-feedback">Por favor ingresa una fecha de nacimiento válida.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="correo_electronico" class="form-label">Correo Electrónico</label>
@@ -130,12 +132,14 @@
                     </div>
                     <div class="mb-4 w-100">
                         <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <div class="invalid-feedback">Por favor ingresa una contraseña.</div>
+                        <input type="password" class="form-control" id="password" name="password" minlength="8" required>
+                        <small class="form-text text-muted">Mínimo 8 caracteres</small>
+                        <div class="invalid-feedback">Por favor ingresa una contraseña válida.</div>
                     </div>
                     <div class="mb-4 w-100">
                         <label for="telefono" class="form-label">Teléfono</label>
                         <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
+                        <small class="form-text text-muted">(Ej: 85477458)</small>
                         <div class="invalid-feedback">Por favor ingresa un número de teléfono válido.</div>
                     </div>
                     <div class="mb-4 w-100">
@@ -154,6 +158,15 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div id="tutor-section" class="mb-4 w-100" style="display:none;">
+                        <label for="tutor" class="form-label">Tutor</label>
+                        <select class="form-control" id="tutor" name="tutor">
+                            <option value="">Seleccione un tutor</option>
+                            {% for tutor in tutores %}
+                            <option value="{{ tutor.id_tutor }}">{{ tutor.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <!-- Botón de enviar -->
                     <div class="d-grid w-100">
                         <button type="submit" class="btn btn-primary">Crear Cuenta</button>
@@ -168,42 +181,141 @@
     </div>
     
     <script>
-        document.getElementById('formAlumnosreg').addEventListener('submit', function (event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-    
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('fecha_nacimiento').addEventListener('change', checkAge);
+        
+            document.getElementById('formAlumnosreg').addEventListener('submit', function (event) {
+                event.preventDefault();  // Evitar el envío normal del formulario
+        
+                const rut = document.getElementById('rut').value;
+                const isRUTValid = validarRUT(rut);
+                const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+                const hoy = new Date();
+                let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+                const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+                if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                    edad--;
                 }
-            }).then(response => response.json())
-                .then(data => {
-                    Swal.fire({
-                        title: 'Respuesta del Servidor',
-                        text: data.message,
-                        icon: data.success ? 'success' : 'error'
-                    }).then(() => {
-                        if (data.success) {
-                            window.location.reload();
+                const isAgeValid = edad >= 18;
+                const tutor = document.getElementById('tutor').value;
+                const isTutorRequired = edad < 18 && !tutor;
+        
+                if (!isRUTValid) {
+                    document.getElementById('rut').classList.add('is-invalid');
+                    document.getElementById('rut').nextElementSibling.textContent = 'Por favor ingresa un RUT válido.';
+                } else {
+                    document.getElementById('rut').classList.remove('is-invalid');
+                    document.getElementById('rut').nextElementSibling.textContent = '';
+                }
+        
+                if (isTutorRequired) {
+                    document.getElementById('fecha_nacimiento').classList.add('is-invalid');
+                    document.getElementById('fecha_nacimiento').nextElementSibling.textContent = 'Debes tener al menos 18 años o proporcionar un tutor.';
+                } else {
+                    document.getElementById('fecha_nacimiento').classList.remove('is-invalid');
+                    document.getElementById('fecha_nacimiento').nextElementSibling.textContent = '';
+                }
+        
+                const nombre = document.getElementById('nombre').value;
+                const isNameValid = nombre.length >= 10;
+                if (!isNameValid) {
+                    document.getElementById('nombre').classList.add('is-invalid');
+                    document.getElementById('nombre').nextElementSibling.textContent = 'El nombre debe tener al menos 10 caracteres.';
+                } else {
+                    document.getElementById('nombre').classList.remove('is-invalid');
+                    document.getElementById('nombre').nextElementSibling.textContent = '';
+                }
+        
+                const password = document.getElementById('password').value;
+                const isPasswordValid = validarPassword(password);
+                if (!isPasswordValid) {
+                    document.getElementById('password').classList.add('is-invalid');
+                    document.getElementById('password').nextElementSibling.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+                } else {
+                    document.getElementById('password').classList.remove('is-invalid');
+                    document.getElementById('password').nextElementSibling.textContent = '';
+                }
+        
+                if (isRUTValid && (!isTutorRequired || (isTutorRequired && tutor)) && isNameValid && isPasswordValid) {
+                    var formData = new FormData(this);
+        
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                         }
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Hubo un problema con la petición',
-                        icon: 'error'
-                    });
-                });
+                    }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: 'Respuesta del Servidor',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error'
+                            });
+                        }).catch(error => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hubo un problema con la petición',
+                                icon: 'error'
+                            });
+                        });
+                } else {
+                    event.stopPropagation();
+                    this.classList.add('was-validated');
+                }
+            });
+        
+            function validarRUT(rut) {
+                const rutPattern = /^[0-9]+-[0-9kK]{1}$/;
+                if (!rutPattern.test(rut)) {
+                    return false;
+                }
+                const [number, verifier] = rut.split('-');
+                return calculateVerifier(number) === verifier.toLowerCase();
+            }
+        
+            function calculateVerifier(number) {
+                let total = 0;
+                let multiplier = 2;
+                for (let i = number.length - 1; i >= 0; i--) {
+                    total += number.charAt(i) * multiplier;
+                    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+                }
+                const remainder = 11 - (total % 11);
+                if (remainder === 11) {
+                    return '0';
+                }
+                if (remainder === 10) {
+                    return 'k';
+                }
+                return remainder.toString();
+            }
+        
+            function validarPassword(password) {
+                return password.length >= 8;
+            }
+        
+            function checkAge() {
+                const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+                const hoy = new Date();
+                let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+                const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+                if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                    edad--;
+                }
+                if (edad < 18) {
+                    document.getElementById('tutor-section').style.display = 'block';
+                } else {
+                    document.getElementById('tutor-section').style.display = 'none';
+                }
+            }
         });
-    </script>
+        </script>
+        
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-    </script>
 </body>
 </html>

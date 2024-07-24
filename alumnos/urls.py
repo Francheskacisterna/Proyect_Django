@@ -40,9 +40,9 @@ urlpatterns = [
 
     path('inscripcion/crud/', crud_inscripciones, name='crud_inscripciones'),
     path('inscripcion/add/', inscripcion_Add, name='inscripcion_Add'),
-    path('inscripcion/del/<str:pk>/', inscripcion_del, name='inscripcion_del'),
-    path('inscripcion/findEdit/<str:pk>/', inscripcion_findEdit, name='inscripcion_findEdit'),
-    path('inscripcion/update/', inscripcion_update, name='inscripcion_update'),
+    path('inscripcion/findEdit/<int:pk>/', inscripcion_findEdit, name='inscripcion_findEdit'),
+    path('inscripcion/update/<int:pk>/', inscripcion_update, name='inscripcion_update'),
+    path('inscripcion/del/<int:pk>/', inscripcion_del, name='inscripcion_del'),
 
     path('tutor/crud/', crud_tutor, name='crud_tutor'),
     path('tutor/add/', tutor_Add, name='tutor_Add'),

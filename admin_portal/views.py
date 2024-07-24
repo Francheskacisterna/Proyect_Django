@@ -10,21 +10,21 @@ def menu(request):
 @login_required
 def home_adm(request):
     context = {}
-    return render(request, 'admin_portal/home.html')
+    return render(request, 'admin_portal/home_adm.html')
 
 @login_required
 def planes_adm(request):
     context = {}
-    return render(request, 'admin_portal/planes.html')
+    return render(request, 'admin_portal/planes_adm.html')
 
 @login_required
 def nosotros_adm(request):
     context = {}
-    return render(request, 'admin_portal/nosotros.html')
+    return render(request, 'admin_portal/nosotros_adm.html')
 
 @login_required
 def contactos_adm(request):
     context = {}
-    return render(request, 'admin_portal/contactos.html')
+    return render(request, 'admin_portal/contactos_adm.html')
 
 

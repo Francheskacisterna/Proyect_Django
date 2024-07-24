@@ -179,36 +179,52 @@
     <div class="container">
         <h2>Crear Cuenta de Alumno</h2>
         <!-- Formulario de registro de alumno -->
-        <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST">
+        <form id="formAlumnosAdd" action="{% url 'alumnos_Add' %}" method="POST" novalidate>
             {% csrf_token %}
             <!-- Campos personalizados para el registro de alumno -->
             <div class="form-group">
                 <label for="rut">RUT</label>
-                <input type="text" id="rut" name="rut" required>
+                <input type="text" id="rut" name="rut" pattern="\d{7,8}-[\dkK]{1}" required>
+                <small class="form-text">(Ej: 12345678-9)</small>
+                <div class="invalid-feedback">Por favor ingresa un RUT válido.</div>
             </div>
             <div class="form-group">
                 <label for="nombre">Nombre Completo</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" minlength="10" required>
+                <small class="form-text">Mínimo 10 caracteres</small>
+                <div class="invalid-feedback">El nombre debe tener al menos 10 caracteres.</div>
             </div>
             <div class="form-group">
                 <label for="username">Nombre de Usuario</label>
                 <input type="text" id="username" name="username" required>
+                <div class="invalid-feedback">Por favor ingresa un nombre de usuario.</div>
             </div>
             <div class="form-group">
                 <label for="direccion">Dirección</label>
                 <input type="text" id="direccion" name="direccion" required>
+                <div class="invalid-feedback">Por favor ingresa la dirección.</div>
             </div>
             <div class="form-group">
                 <label for="fecha_nacimiento">Fecha de Nacimiento</label>
-                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required onchange="checkAge()">
+                <div class="invalid-feedback">Debes tener al menos 18 años.</div>
             </div>
             <div class="form-group">
                 <label for="correo_electronico">Correo Electrónico</label>
                 <input type="email" id="correo_electronico" name="correo_electronico" required>
+                <div class="invalid-feedback">Por favor ingresa un correo electrónico válido.</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" minlength="8" required>
+                <small class="form-text">Mínimo 8 caracteres</small>
+                <div class="invalid-feedback">Por favor ingresa una contraseña válida.</div>
             </div>
             <div class="form-group">
                 <label for="telefono">Teléfono</label>
                 <input type="text" id="telefono" name="telefono" pattern="[0-9]{9}" required>
+                <small class="form-text">(Ej: 85477458)</small>
+                <div class="invalid-feedback">Por favor ingresa un número de teléfono válido.</div>
             </div>
             <div class="form-group">
                 <label for="nivel_educacion">Nivel de Educación</label>
@@ -226,54 +242,177 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="form-group" id="tutor-section" style="display:none;">
+                <label for="tutor">Tutor</label>
+                <select id="tutor" name="tutor">
+                    <option value="">Seleccione un tutor</option>
+                    {% for tutor in tutores %}
+                    <option value="{{ tutor.id_tutor }}">{{ tutor.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <!-- Botón de enviar -->
             <div class="form-group">
                 <input type="submit" value="Crear Cuenta">
             </div>
         </form>
-        <!-- Enlace para iniciar sesión si ya tiene cuenta -->
-        <div class="form-group">
-            <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
-        </div>
-        <div id="idMensajes">
-            {% if mensaje %}
-            <div class="message">{{ mensaje }}</div>
-            {% endif %}
+        <div class="form-group mt-3">
+            <a href="{% url 'lista_combinada' %}" class="btn btn-secondary">Volver</a>
         </div>
     </div>
-    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
     <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.getElementById('formAlumnosAdd').addEventListener('submit', function (event) {
-            event.preventDefault();  // Evitar el envío normal del formulario
-            var formData = new FormData(this);
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('fecha_nacimiento').addEventListener('change', checkAge);
 
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            document.getElementById('formAlumnosAdd').addEventListener('submit', function (event) {
+                event.preventDefault();  // Evitar el envío normal del formulario
+
+                const rut = document.getElementById('rut').value;
+                const isRUTValid = validarRUT(rut);
+                if (!isRUTValid) {
+                    document.getElementById('rut').classList.add('is-invalid');
+                } else {
+                    document.getElementById('rut').classList.remove('is-invalid');
                 }
-            }).then(response => response.json())
-                .then(data => {
-                    Swal.fire({
-                        title: 'Respuesta del Servidor',
-                        text: data.message,
-                        icon: data.success ? 'success' : 'error'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Hubo un problema con la petición',
-                        icon: 'error'
-                    });
-                });
+
+                const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+                const hoy = new Date();
+                let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+                const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+                if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                    edad--;
+                }
+                const isAgeValid = edad >= 18;
+                const tutor = document.getElementById('tutor').value;
+                const isTutorRequired = edad < 18 && !tutor;
+
+                if (!isAgeValid && !tutor) {
+                    document.getElementById('fecha_nacimiento').classList.add('is-invalid');
+                } else {
+                    document.getElementById('fecha_nacimiento').classList.remove('is-invalid');
+                }
+
+                const nombre = document.getElementById('nombre').value;
+                const isNameValid = nombre.length >= 10;
+                if (!isNameValid) {
+                    document.getElementById('nombre').classList.add('is-invalid');
+                } else {
+                    document.getElementById('nombre').classList.remove('is-invalid');
+                }
+
+                const correo = document.getElementById('correo_electronico').value;
+                const isEmailValid = validarEmail(correo);
+                if (!isEmailValid) {
+                    document.getElementById('correo_electronico').classList.add('is-invalid');
+                } else {
+                    document.getElementById('correo_electronico').classList.remove('is-invalid');
+                }
+
+                const telefono = document.getElementById('telefono').value;
+                const isPhoneValid = telefono.match(/^[0-9]{9}$/);
+                if (!isPhoneValid) {
+                    document.getElementById('telefono').classList.add('is-invalid');
+                } else {
+                    document.getElementById('telefono').classList.remove('is-invalid');
+                }
+
+                const password = document.getElementById('password').value;
+                const isPasswordValid = validarPassword(password);
+                if (!isPasswordValid) {
+                    document.getElementById('password').classList.add('is-invalid');
+                } else {
+                    document.getElementById('password').classList.remove('is-invalid');
+                }
+
+                if (isRUTValid && (isAgeValid || tutor) && isNameValid && isEmailValid && isPhoneValid && isPasswordValid) {
+                    var formData = new FormData(this);
+
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    }).then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: 'Respuesta del Servidor',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error'
+                            }).then(() => {
+                                if (data.success) {
+                                    window.location.reload();  // Recargar la página para ver los cambios
+                                }
+                            });
+                        }).catch(error => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Hubo un problema con la petición',
+                                icon: 'error'
+                            });
+                        });
+                } else {
+                    event.stopPropagation();
+                    this.classList.add('was-validated');
+                }
+            });
+
+            function validarRUT(rut) {
+                const rutPattern = /^[0-9]+-[0-9kK]{1}$/;
+                if (!rutPattern.test(rut)) {
+                    return false;
+                }
+                const [number, verifier] = rut.split('-');
+                return calculateVerifier(number) === verifier.toLowerCase();
+            }
+
+            function calculateVerifier(number) {
+                let total = 0;
+                let multiplier = 2;
+                for (let i = number.length - 1; i >= 0; i--) {
+                    total += number.charAt(i) * multiplier;
+                    multiplier = multiplier === 7 ? 2 : multiplier + 1;
+                }
+                const remainder = 11 - (total % 11);
+                if (remainder === 11) {
+                    return '0';
+                }
+                if (remainder === 10) {
+                    return 'k';
+                }
+                return remainder.toString();
+            }
+
+            function validarEmail(email) {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailPattern.test(email);
+            }
+
+            function validarPassword(password) {
+                return password.length >= 8;
+            }
+
+            function checkAge() {
+                const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+                const hoy = new Date();
+                let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+                const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+                if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+                    edad--;
+                }
+                if (edad < 18) {
+                    document.getElementById('tutor-section').style.display = 'block';
+                } else {
+                    document.getElementById('tutor-section').style.display = 'none';
+                }
+            }
         });
-    </script>
     </script>
 </body>
 

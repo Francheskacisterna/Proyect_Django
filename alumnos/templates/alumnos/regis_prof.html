@@ -101,110 +101,163 @@
             </button>
         </div>
     </nav>
-    <div class="container w-75 bg-primary mt-4 rounded shadow">
-        <div class="row align-items-stretch">
-            <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
-            <div class="col bg-white p-5 rounded-end">
-                <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
-                <!-- Formulario de registro de profesor -->
-                <form id="formProfreg" action="{% url 'regis_prof' %}" method="POST">                    
-                    {% csrf_token %}
-                    <!-- Campos personalizados para el registro de profesor -->
-                    <div class="mb-4 w-100">
-                        <label for="rut" class="form-label">RUT</label>
-                        <input type="text" class="form-control" id="rut" name="rut" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el RUT del Profesor.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="nombre" class="form-label">Nombre Completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa el nombre completo.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" class="form-control" id="direccion" name="direccion" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la dirección.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa la fecha de nacimiento.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="correo_electronico" class="form-label">Correo Electrónico</label>
-                        <input type="email" class="form-control" id="correo_electronico" name="correo_electronico" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un correo electrónico válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="username" class="form-label">Usuario</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un nombre de usuario.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa una contraseña.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}" required>
-                        <div class="invalid-feedback">
-                            Por favor ingresa un número de teléfono válido.
-                        </div>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="especialidad" class="form-label">Especialidad</label>
-                        <select class="form-control" id="especialidad" name="especialidad" required>
-                            {% for especialidad in especialidades %}
-                            <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-4 w-100">
-                        <label for="genero" class="form-label">Género</label>
-                        <select class="form-control" id="genero" name="genero" required>
-                            {% for genero in generos %}
-                            <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <!-- Botón de enviar -->
-                    <div class="d-grid w-100">
-                        <button type="submit" class="btn btn-primary">Crear Cuenta</button>
-                    </div>
-                </form>
-                <!-- Enlace para iniciar sesión si ya tiene cuenta -->
-                <div class="my-3 text-center w-100">
-                    <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
+<    <div class="container w-75 bg-primary mt-4 rounded shadow">
+    <div class="row align-items-stretch">
+        <div class="col bg d-none d-lg-block col-md-5 col-lg-5 col-xl-6 rounded"></div>
+        <div class="col bg-white p-5 rounded-end">
+            <h2 class="fw-bold text-center py-5">Crear Cuenta de Profesor</h2>
+
+            <!-- Mostrar mensajes -->
+            {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Formulario de registro de profesor -->
+            <form id="formProfreg" action="{% url 'regis_prof' %}" method="POST" novalidate>
+                {% csrf_token %}
+                <!-- Campos personalizados para el registro de profesor -->
+                <div class="mb-4 w-100">
+                    <label for="rut" class="form-label">RUT</label>
+                    <input type="text" class="form-control" id="rut" name="rut" pattern="\d{7,8}-[\dkK]{1}"
+                        required>
+                    <small class="form-text text-muted">(Ej: 12345678-9)</small>
+                    <div class="invalid-feedback">Por favor ingresa un RUT válido.</div>
                 </div>
+                <div class="mb-4 w-100">
+                    <label for="nombre" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" minlength="10" required>
+                    <small class="form-text text-muted">Mínimo 10 caracteres</small>
+                    <div class="invalid-feedback">Por favor ingresa el nombre completo.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" required>
+                    <div class="invalid-feedback">Por favor ingresa la dirección.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                    <div class="invalid-feedback">Por favor ingresa una fecha de nacimiento válida.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="correo_electronico" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo_electronico" name="correo_electronico"
+                        required>
+                    <div class="invalid-feedback">Por favor ingresa un correo electrónico válido.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="username" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                    <div class="invalid-feedback">Por favor ingresa un nombre de usuario.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" minlength="8"
+                        required>
+                    <small class="form-text text-muted">Mínimo 8 caracteres</small>
+                    <div class="invalid-feedback">Por favor ingresa una contraseña válida.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="text" class="form-control" id="telefono" name="telefono" pattern="[0-9]{9}"
+                        required>
+                    <small class="form-text text-muted">(Ej: 85477458)</small>
+                    <div class="invalid-feedback">Por favor ingresa un número de teléfono válido.</div>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="especialidad" class="form-label">Especialidad</label>
+                    <select class="form-control" id="especialidad" name="especialidad" required>
+                        {% for especialidad in especialidades %}
+                        <option value="{{ especialidad.id_especialidad }}">{{ especialidad.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4 w-100">
+                    <label for="genero" class="form-label">Género</label>
+                    <select class="form-control" id="genero" name="genero" required>
+                        {% for genero in generos %}
+                        <option value="{{ genero.id_genero }}">{{ genero.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <!-- Botón de enviar -->
+                <div class="d-grid w-100">
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                </div>
+            </form>
+            <!-- Enlace para iniciar sesión si ya tiene cuenta -->
+            <div class="my-3 text-center w-100">
+                <span>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></span>
             </div>
         </div>
     </div>
-     
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'alumnos/java/main.js' %}"></script>
-    <script src="{% static 'alumnos/java/jquery.js' %}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.getElementById('formProfreg').addEventListener('submit', function(event) {
-            event.preventDefault();  // Prevenir el envío estándar del formulario
-        
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'alumnos/java/main.js' %}"></script>
+<script src="{% static 'alumnos/java/jquery.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById('formProfreg').addEventListener('submit', function (event) {
+        event.preventDefault();  // Evitar el envío normal del formulario
+
+        // Validar RUT
+        const rut = document.getElementById('rut').value;
+        const isRUTValid = validarRUT(rut);
+        if (!isRUTValid) {
+            document.getElementById('rut').classList.add('is-invalid');
+            document.getElementById('rut').nextElementSibling.textContent = 'Por favor ingresa un RUT válido.';
+        } else {
+            document.getElementById('rut').classList.remove('is-invalid');
+            document.getElementById('rut').nextElementSibling.textContent = '';
+        }
+
+        // Validar que el usuario sea mayor de 18 años
+        const fechaNacimiento = new Date(document.getElementById('fecha_nacimiento').value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+        const mes = hoy.getMonth() - fechaNacimiento.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNacimiento.getDate())) {
+            edad--;
+        }
+        const isAgeValid = edad >= 18;
+        if (!isAgeValid) {
+            document.getElementById('fecha_nacimiento').classList.add('is-invalid');
+            document.getElementById('fecha_nacimiento').nextElementSibling.textContent = 'Debes tener al menos 18 años.';
+        } else {
+            document.getElementById('fecha_nacimiento').classList.remove('is-invalid');
+            document.getElementById('fecha_nacimiento').nextElementSibling.textContent = '';
+        }
+
+        // Validar que el nombre completo tenga al menos 10 caracteres
+        const nombre = document.getElementById('nombre').value;
+        const isNameValid = nombre.length >= 10;
+        if (!isNameValid) {
+            document.getElementById('nombre').classList.add('is-invalid');
+            document.getElementById('nombre').nextElementSibling.textContent = 'El nombre debe tener al menos 10 caracteres.';
+        } else {
+            document.getElementById('nombre').classList.remove('is-invalid');
+            document.getElementById('nombre').nextElementSibling.textContent = '';
+        }
+
+        // Validar la contraseña
+        const password = document.getElementById('password').value;
+        const isPasswordValid = validarPassword(password);
+        if (!isPasswordValid) {
+            document.getElementById('password').classList.add('is-invalid');
+            document.getElementById('password').nextElementSibling.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+        } else {
+            document.getElementById('password').classList.remove('is-invalid');
+            document.getElementById('password').nextElementSibling.textContent = '';
+        }
+
+        if (isRUTValid && isAgeValid && isNameValid && isPasswordValid) {
             var formData = new FormData(this);
-        
+
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -212,19 +265,54 @@
                     'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert(data.message);  // Mostrar mensaje de éxito
-                      window.location.href = '/ruta-a-redirigir'; // Redirigir a una página de éxito
-                  } else {
-                      alert(data.message);  // Mostrar mensaje de error
-                  }
-              }).catch(error => {
-                  console.error('Error:', error);
-                  alert('Hubo un error al procesar la solicitud.');
-              });
-        });
-        </script>        
-</body>
+                .then(data => {
+                    Swal.fire({
+                        title: 'Respuesta del Servidor',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Hubo un problema con la petición',
+                        icon: 'error'
+                    });
+                });
+        } else {
+            event.stopPropagation();
+            this.classList.add('was-validated');
+        }
+    });
 
+    function validarRUT(rut) {
+        const rutPattern = /^[0-9]+-[0-9kK]{1}$/;
+        if (!rutPattern.test(rut)) {
+            return false;
+        }
+        const [number, verifier] = rut.split('-');
+        return calculateVerifier(number) === verifier.toLowerCase();
+    }
+
+    function calculateVerifier(number) {
+        let total = 0;
+        let multiplier = 2;
+        for (let i = number.length - 1; i >= 0; i--) {
+            total += number.charAt(i) * multiplier;
+            multiplier = multiplier === 7 ? 2 : multiplier + 1;
+        }
+        const remainder = 11 - (total % 11);
+        if (remainder === 11) {
+            return '0';
+        }
+        if (remainder === 10) {
+            return 'k';
+        }
+        return remainder.toString();
+    }
+
+    function validarPassword(password) {
+        return password.length >= 8;
+    }
+</script>
+</body>
 </html>

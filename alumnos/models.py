@@ -53,7 +53,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
-# El resto de tus modelos
+
 class Genero(models.Model):
     id_genero = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=50)
@@ -82,6 +82,7 @@ class Tutor(models.Model):
 
     def __str__(self):
         return self.nombre
+        
 
 class Alumno(AbstractBaseUser, PermissionsMixin):
     id_alumno = models.AutoField(primary_key=True)
@@ -93,7 +94,7 @@ class Alumno(AbstractBaseUser, PermissionsMixin):
     correo_electronico = models.EmailField(max_length=60)
     telefono = models.CharField(max_length=20, blank=True)
     genero = models.ForeignKey(Genero, on_delete=models.SET_NULL, null=True)
-    username = models.CharField(unique=True, max_length=20, null=False, default='default_username')  # Añade default aquí
+    username = models.CharField(unique=True, max_length=20, null=False, default='default_username')
     password = models.CharField(max_length=100, default='default_password')
     id_tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True)
 
@@ -104,17 +105,17 @@ class Alumno(AbstractBaseUser, PermissionsMixin):
 
     groups = models.ManyToManyField(
         Group,
-        related_name='alumnos_groups',  # Agregar related_name único
+        related_name='alumnos_groups',  
         blank=True
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        related_name='alumnos_permissions',  # Agregar related_name único
+        related_name='alumnos_permissions',  
         blank=True
     )
 
     def __str__(self):
-        return self.username
+        return self.nombre
 
 
 class Profesor(models.Model):
@@ -146,9 +147,10 @@ class Clase(models.Model):
 class Inscripcion(models.Model):
     id_inscripcion = models.AutoField(primary_key=True)
     fecha_inscripcion = models.DateField(auto_now_add=True)
-    id_alumno = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    id_alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)  # Cambiado de CustomUser a Alumno
     id_clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.id_alumno.nombre} inscrito en {self.id_clase.nombre_curso}'
+
 

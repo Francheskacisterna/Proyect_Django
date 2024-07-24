@@ -38,16 +38,16 @@
                             <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'menu' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'crud_clases' %}">Clases</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'lista_combinada' %}">Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'crud' %}">Usuarios</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'crud_clases' %}">Clases</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'crud_inscripciones' %}">Inscripción</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2" href="{% url 'crud_profesor' %}">Profesores</a>
+                            <a class="nav-link mx-lg-2" href="{% url 'contactos_adm' %}">Contactos</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button"
@@ -98,7 +98,7 @@
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="5000">
                 {% load static %}
-                <img src="{% static 'alumnos/img/imge1.png' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'alumnos/img/imge3.jpeg' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption">
                     <h5>Bienvenido a LBWUS</h5>
                     <p>Apoyado por un equipo de profesionales experimentados, aquí es donde tus desafíos se transforman
@@ -117,7 +117,7 @@
             </div>
             <div class="carousel-item">
                 {% load static %}
-                <img src="{% static 'alumnos/img/imge3.jpeg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'alumnos/img/imge1.png' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption">
                     <h5>¿Quiénes somos?</h5>
                     <p>Estás interesado en conocernos un poco más.</p>

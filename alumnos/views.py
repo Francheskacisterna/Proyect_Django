@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Alumno, Genero, Tutor, Profesor, CustomUser, Clase, Especialidad, Inscripcion
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.models import User, Group
-from django.contrib import messages
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model 
 from django.urls import reverse_lazy
 from django.utils.dateparse import parse_date
+from datetime import datetime
+
+from .models import Alumno, Genero, Tutor, Profesor, CustomUser, Clase, Especialidad, Inscripcion, USER_TYPE_PROFESOR
+
+CustomUser = get_user_model()
 
 # Create your views here.
 
@@ -87,8 +90,10 @@ def pagar(request):
 
 def regis_alum(request):
     generos = Genero.objects.all()
+    tutores = Tutor.objects.all()
     data = {
-        'generos': generos
+        'generos': generos,
+        'tutores': tutores
     }
     if request.method == 'POST':
         try:
@@ -102,12 +107,23 @@ def regis_alum(request):
             genero_id = request.POST['genero']
             username = request.POST['username']
             password = request.POST['password']
-            
+            tutor_id = request.POST.get('tutor', None)
+
             # Verificar si el username ya existe
             if CustomUser.objects.filter(username=username).exists():
                 return JsonResponse({"success": False, "message": "El nombre de usuario ya existe. Por favor elija otro nombre de usuario."})
 
             genero = Genero.objects.get(id_genero=genero_id)
+            fecha_nac_dt = datetime.strptime(fecha_nacimiento, '%Y-%m-%d')
+            edad = (datetime.now() - fecha_nac_dt).days // 365
+
+            if edad < 18 and not tutor_id:
+                return JsonResponse({"success": False, "message": "Un tutor es obligatorio para alumnos menores de 18 años."})
+
+            if tutor_id:
+                tutor = Tutor.objects.get(id_tutor=tutor_id)
+            else:
+                tutor = None
 
             # Crear el usuario
             c = CustomUser.objects.create_user(username=username, password=password, user_type=CustomUser.ALUMNO, email=correo_electronico)
@@ -126,7 +142,8 @@ def regis_alum(request):
                 fecha_nacimiento=fecha_nacimiento,
                 correo_electronico=correo_electronico,
                 telefono=telefono,
-                genero=genero
+                genero=genero,
+                id_tutor=tutor
             )
 
             return JsonResponse({"success": True, "message": "Alumno registrado exitosamente."})
@@ -134,6 +151,7 @@ def regis_alum(request):
             return JsonResponse({"success": False, "message": str(e)})
 
     return render(request, 'alumnos/regis_alum.html', data)
+
 
 #REGISTRO DE PROFESORES
 
@@ -163,8 +181,7 @@ def regis_prof(request):
 
             # Verificar si el nombre de usuario ya existe
             if CustomUser.objects.filter(username=usuario).exists():
-                messages.error(request, "El nombre de usuario ya existe. Por favor elija otro nombre de usuario.")
-                return render(request, 'alumnos/regis_prof.html', data)
+                return JsonResponse({"success": False, "message": "El nombre de usuario ya existe. Por favor elija otro nombre de usuario."})
 
             genero = Genero.objects.get(id_genero=genero_id)
             especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
@@ -199,13 +216,12 @@ def regis_prof(request):
             )
             print("Profesor creado exitosamente")
 
-            messages.success(request, "Profesor registrado exitosamente.")
-            return HttpResponseRedirect('/alumnos/registro_profesor')  # Redirigir después del registro
+            return JsonResponse({"success": True, "message": "Profesor registrado exitosamente."})
         except Exception as e:
-            messages.error(request, f"Error al registrar el profesor: {str(e)}")
             print(f"Error: {str(e)}")
-            return render(request, 'alumnos/regis_prof.html', data)
-    return render(request, 'alumnos/regis_prof.html', data)
+            return JsonResponse({"success": False, "message": f"Error al registrar el profesor: {str(e)}"})
+    else:
+        return render(request, 'alumnos/regis_prof.html', data)
 
 
 #REGISTRO DE TUTOR
@@ -453,11 +469,6 @@ def profesor_findEdit(request, pk):
         return render(request, 'alumnos/profesor_list.html', context)
 
 
-from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse
-from .models import Profesor, Genero, Especialidad
-from django.utils.dateparse import parse_date
-
 def profesorUpdate(request):
     if request.method == "POST":
         try:
@@ -475,20 +486,23 @@ def profesorUpdate(request):
 
             profesor.telefono = request.POST.get("telefono")
             profesor.correo_electronico = request.POST.get("correo_electronico")
-            
+
             genero_id = request.POST.get("genero")
             especialidad_id = request.POST.get("especialidad")
 
+            print(f"Genero ID: {genero_id}, Especialidad ID: {especialidad_id}")
+
             if genero_id:
-                profesor.genero = Genero.objects.get(id=genero_id)
+                profesor.genero = Genero.objects.get(id_genero=genero_id)
             if especialidad_id:
-                profesor.especialidad = Especialidad.objects.get(id=especialidad_id)
+                profesor.especialidad = Especialidad.objects.get(id_especialidad=especialidad_id)
 
             profesor.save()
 
             mensaje = "Ok, datos actualizados..."
         except Exception as e:
             mensaje = f"Error al actualizar los datos: {str(e)}"
+            print(f"Excepción: {str(e)}")
 
         profesores = Profesor.objects.all()
         context = {
@@ -502,15 +516,6 @@ def profesorUpdate(request):
         return render(request, 'alumnos/profesor_list.html', context)
 
 
-
-def lista_combinada(request):
-    alumnos = Alumno.objects.all()
-    profesores = Profesor.objects.all()
-    context = {
-        'alumnos': alumnos,
-        'profesores': profesores
-    }
-    return render(request, 'alumnos/lista_combinada.html', context)
 
 # Crud Tutor
 
@@ -561,7 +566,7 @@ def tutor_del(request, pk):
         mensaje = "Bien, datos eliminados..."
         tutores = Tutor.objects.all()
         context = {'tutores': tutores, 'mensaje': mensaje}
-        return render(request, 'tutores/tutor_list.html', context)
+        return render(request, 'alumnos/tutor_list.html', context)
     except Tutor.DoesNotExist:
         mensaje = "Error, tutor no existe"
         tutores = Tutor.objects.all()
@@ -591,11 +596,16 @@ def tutor_Update(request):
         tutor.nombre = request.POST.get("nombre")
         tutor.rut = request.POST.get("rut")
         tutor.direccion = request.POST.get("direccion")
-        tutor.fecha_nacimiento = request.POST.get("fecha_nacimiento")
+        
+        # Convertir la fecha al formato adecuado solo si no está vacía
+        fecha_nacimiento_str = request.POST.get("fecha_nacimiento")
+        if fecha_nacimiento_str:
+            tutor.fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%Y-%m-%d').date()
+        
         tutor.correo_electronico = request.POST.get("correo_electronico")
         tutor.telefono = request.POST.get("telefono")
         genero_id = request.POST.get("genero_id")
-        tutor.genero = Genero.objects.get(id_genero=genero_id) 
+        tutor.genero = Genero.objects.get(id_genero=genero_id)
         tutor.username = request.POST.get("username")
         tutor.password = request.POST.get("password")
 
@@ -607,12 +617,12 @@ def tutor_Update(request):
             'generos': generos,
             'tutor': tutor
         }
-        return render(request, 'alumnos/tutor_edit.html', context)  
+        return render(request, 'alumnos/tutor_edit.html', context)
     else:
         tutores = Tutor.objects.all()
-        generos = Genero.objects.all()  
+        generos = Genero.objects.all()
         context = {'tutores': tutores, 'generos': generos}
-        return render(request, 'alumnos/tutor_list.html', context)  
+        return render(request, 'alumnos/tutor_list.html', context)
 
 
 
@@ -709,28 +719,35 @@ def crud_inscripciones(request):
     context = {'inscripciones': inscripciones}
     return render(request, 'alumnos/inscripcion_list.html', context)
 
+
 def inscripcion_Add(request):
     if request.method == 'POST':
+        id_alumno = request.POST.get('id_alumno')
+        id_clase = request.POST.get('id_clase')
+
         try:
-            id_alumno = request.POST.get('id_alumno')
-            id_clase = request.POST.get('id_clase')
+            alumno = Alumno.objects.get(pk=id_alumno)
+            clase = Clase.objects.get(pk=id_clase)
+        except Alumno.DoesNotExist:
+            return JsonResponse({"success": False, "message": f"Alumno con id {id_alumno} no encontrado."})
+        except Clase.DoesNotExist:
+            return JsonResponse({"success": False, "message": f"Clase con id {id_clase} no encontrada."})
 
-            alumno = Alumno.objects.get(id_alumno=id_alumno)
-            clase = Clase.objects.get(id_clase=id_clase)
-
-            Inscripcion.objects.create(id_alumno=alumno, id_clase=clase)
-            return JsonResponse({"success": True, "message": "Inscripción registrada exitosamente."})
+        try:
+            inscripcion = Inscripcion.objects.create(id_alumno=alumno, id_clase=clase)
+            return JsonResponse({"success": True, "message": "Inscripción registrada exitosamente.", "id": inscripcion.id_inscripcion})
         except Exception as e:
-            return JsonResponse({"success": False, "message": str(e)})
+            return JsonResponse({"success": False, "message": f"Error al crear la inscripción: {str(e)}"})
 
     else:
         alumnos = Alumno.objects.all()
         clases = Clase.objects.all()
         return render(request, 'alumnos/inscripcion_add.html', {'alumnos': alumnos, 'clases': clases})
 
+
 def inscripcion_del(request, pk):
     try:
-        inscripcion = Inscripcion.objects.get(id=pk)
+        inscripcion = Inscripcion.objects.get(id_inscripcion=pk)
         inscripcion.delete()
         mensaje = "Bien, datos eliminados..."
     except Inscripcion.DoesNotExist:
@@ -740,44 +757,47 @@ def inscripcion_del(request, pk):
     context = {'inscripciones': inscripciones, 'mensaje': mensaje}
     return render(request, 'alumnos/inscripcion_list.html', context)
 
+
 def inscripcion_findEdit(request, pk):
-    inscripcion = Inscripcion.objects.filter(id=pk).first()
-    if inscripcion:
-        alumnos = Alumno.objects.all()
-        clases = Clase.objects.all()
-        context = {'inscripcion': inscripcion, 'alumnos': alumnos, 'clases': clases}
-        return render(request, 'alumnos/inscripcion_edit.html', context)
-    else:
-        mensaje = "Error, la inscripción no existe..."
-        return render(request, 'alumnos/inscripcion_list.html', {'mensaje': mensaje})
+    inscripcion = get_object_or_404(Inscripcion, id_inscripcion=pk)
+    alumnos = Alumno.objects.all()
+    clases = Clase.objects.all()
+    context = {
+        'inscripcion': inscripcion,
+        'alumnos': alumnos,
+        'clases': clases
+    }
+    return render(request, 'alumnos/inscripcion_edit.html', context)
 
 
 def inscripcion_update(request, pk):
     if request.method == "POST":
-        inscripcion = get_object_or_404(Inscripcion, id=pk)
-        inscripcion.id_alumno = Alumno.objects.get(id=request.POST.get("id_alumno"))
-        inscripcion.id_clase = Clase.objects.get(id=request.POST.get("id_clase"))
-        inscripcion.save()
-
-        mensaje = "Ok, datos actualizados..."
-        return render(request, 'alumnos/inscripcion_edit.html', {'mensaje': mensaje, 'inscripcion': inscripcion})
+        try:
+            inscripcion = get_object_or_404(Inscripcion, id_inscripcion=pk)
+            inscripcion.id_alumno = Alumno.objects.get(id_alumno=request.POST.get("id_alumno"))
+            inscripcion.id_clase = Clase.objects.get(id_clase=request.POST.get("id_clase"))
+            inscripcion.save()
+            return JsonResponse({"success": True, "message": "Inscripción actualizada exitosamente."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": f"Error al actualizar la inscripción: {str(e)}"})
     else:
-        inscripciones = Inscripcion.objects.all()
-        return render(request, 'alumnos/inscripcion_list.html', {'inscripciones': inscripciones})
+        return JsonResponse({"success": False, "message": "Método no permitido."})
 
 
 def lista_combinada(request):
-    alumnos = Alumno.objects.all()
-    profesores = Profesor.objects.all()
+    alumnos = Alumno.objects.select_related('id_tutor', 'genero').all()
+    profesores = Profesor.objects.select_related('especialidad', 'genero').all()
+    tutores = Tutor.objects.select_related('genero').all()
     context = {
         'alumnos': alumnos,
-        'profesores': profesores
-
+        'profesores': profesores,
+        'tutores': tutores
     }
     return render(request, 'alumnos/lista_combinada.html', context)
 
 
 
+
+
+
     
-
-

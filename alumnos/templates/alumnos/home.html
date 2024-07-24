@@ -13,17 +13,17 @@
     <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
     <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
-    
 </head>
 
 <body>
-      <!--Navbar-->
-      <nav class="navbar navbar-expand-lg fixed-top">
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand me-auto" href="#">
                 {% load static %}
-                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">                
-                LBWUS</a>
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px" class="d-inline-block align-text-top">
+                LBWUS
+            </a>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
@@ -45,74 +45,98 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2" href="{% url 'contactos' %}">Contactos</a>
-                        </li>                        
+                        </li>
                     </ul>
                 </div>
             </div>
             <a href="{% url 'opcion_user' %}" class="registrarse-button btn btn-primary">Registrarse</a>
-            <a href="{% url 'login' %}"class="login-button btn btn-secondary">Iniciar</a>
+            <a href="{% url 'login' %}" class="login-button btn btn-secondary">Iniciar</a>
             <!-- Botón para cambiar el tema con iconos -->
             <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
-                <i class="bi bi-sun"></i>  <!-- Icono predeterminado para el tema claro -->
+                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
             </button>
+            <!-- Carrito de compras icono y desplegable -->
+            <div class="submenu">
+                <button id="carrito-button" class="btn btn-outline-light ms-2 carrito-icon">
+                    <i class="bi bi-cart-fill"></i> <!-- Icono de carrito de Bootstrap -->
+                    <span id="carrito-count" class="carrito-count">0</span>
+                </button>
+                <div id="carrito" class="carrito-dropdown">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-carrito"></tbody>
+                    </table>
+                    <div class="text-end">
+                        <strong>Total: $<span id="total-carrito">0</span></strong>
+                    </div>
+                    <button id="vaciar-carrito" class="btn btn-danger w-100 mt-2">Vaciar Carrito</button>
+                    <button id="ir-a-pagar" class="btn btn-primary w-100 mt-2">Pagar</button>
+                </div>
+            </div>
+            <!-- Fin Carrito -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-    </nav>    
-<!--End Navbar-->
+    </nav>
+    <!--End Navbar-->
 
-<!--Carrusel-->
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <!--Carrusel-->
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="5000">
+                {% load static %}
+                <img src="{% static 'alumnos/img/imge1.png' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>Bienvenido a LBWUS</h5>
+                    <p>Apoyado por un equipo de profesionales experimentados, aquí es donde tus desafíos se transforman en victorias.</p>
+                    <a href="{% url 'servicios' %}" class="btn btn-warning mt-3">Conocer más</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                {% load static %}
+                <img src="{% static 'alumnos/img/imge2.jpeg' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>Conoce nuestros planes</h5>
+                    <p>Si estás interesado no esperes más ve el plan que más se adecue a tus necesidades.</p>
+                    <a href="{% url 'planes' %}" class="btn btn-warning mt-3">Conocer más</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                {% load static %}
+                <img src="{% static 'alumnos/img/imge3.jpeg' %}" class="d-block w-100" alt="...">
+                <div class="carousel-caption">
+                    <h5>¿Quiénes somos?</h5>
+                    <p>Estás interesado en conocernos un poco más.</p>
+                    <a href="{% url 'nosotros' %}" class="btn btn-warning mt-3">Pincha aquí</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
-    <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="5000">
-            {% load static %}
-            <img src="{% static 'alumnos/img/imge1.png' %}" class="d-block w-100" alt="...">
-            <div class="carousel-caption">
-                <h5>Bienvenido a LBWUS</h5>
-                <p>Apoyado por un equipo de profesionales experimentados, aquí es donde tus desafíos se transforman en victorias.</p>
-                <a href="{% url 'servicios' %}" class="btn btn-warning mt-3">Conocer más</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            {% load static %}
-            <img src="{% static 'alumnos/img/imge2.jpeg' %}" class="d-block w-100" alt="...">
-            <div class="carousel-caption">
-                <h5>Conoce nuestros planes</h5>
-                <p>Si estás interesado no esperes más ve el plan que más se adecue a tus necesidades.</p>
-                <a href="{% url 'planes' %}" class="btn btn-warning mt-3">Conocer más</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            {% load static %}
-            <img src="{% static 'alumnos/img/imge3.jpeg' %}" class="d-block w-100" alt="...">
-            <div class="carousel-caption">
-                <h5>¿Quiénes somos?</h5>
-                <p>Estás interesado en conocernos un poco más.</p>
-                <a href="{% url 'nosotros' %}" class="btn btn-warning mt-3">Pincha aquí</a>
-            </div>
-        </div>
-        
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-<!-- fin del carrusel-->
+    <!-- fin del carrusel-->
 
     <!--Imagen e información -->
-
     <section id="about" class="about section-padding">
         <div class="container">
             <div class="row">
@@ -124,10 +148,8 @@
                 <div class="col-lg-8 col-md-12 col-12 ps-lg-5 mt-md-5">
                     <h2>Learn better with us</h2>
                     <p> En LBWUS nos preocupamos por ti, te contamos que tenemos más de 10.000 profesionales
-                        especialidados
-                        en todo el territorio nacional. Recuerda que nuestra pagina te contacta con aquellos
-                        profesionales
-                        que se encuentran más cerca de ti. ¡No sufras más! </p>
+                        especialidados en todo el territorio nacional. Recuerda que nuestra pagina te contacta con aquellos
+                        profesionales que se encuentran más cerca de ti. ¡No sufras más! </p>
                     <a href="{% url 'nosotros' %}" class="btn btn-warning"> Saber más</a>
                 </div>
             </div>
@@ -256,7 +278,7 @@
                         </span>
                     </div>
                 </div>
-    
+
                 <div class="information">
                     <p class="title-footer">Información</p>
                     <ul class="infofo">
@@ -267,7 +289,7 @@
                         <li><a href="#">Contáctanos</a></li>
                     </ul>
                 </div>
-    
+
                 <div class="my-account">
                     <p class="title-footer">Mi cuenta</p>
                     <ul class="mi-cuenta">
@@ -278,7 +300,7 @@
                         <li><a href="#">Reembolsos</a></li>
                     </ul>
                 </div>
-    
+
                 <div class="newsletter">
                     <p class="title-footer">Boletín informativo</p>
                     <div class="content">
@@ -290,19 +312,136 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="copyright">
                 <p>Desarrollando enseñanza para el mundo &copy; 2024</p>
             </div>
         </div>
     </footer>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'alumnos/java/main.js' %}"></script>
     <script src="{% static 'alumnos/java/jquery.js' %}"></script>
-    <script
-	src="https://kit.fontawesome.com/81581fb069.js"
-	crossorigin="anonymous"
-	></script>
+    <script src="https://kit.fontawesome.com/81581fb069.js" crossorigin="anonymous"></script>
+
+    <!-- Carrito de Compras JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listaCursosSemanales = document.getElementById('lista-cursos-semanales');
+            const listaCursosMensuales = document.getElementById('lista-cursos-mensuales');
+            const tbody = document.querySelector('#lista-carrito');
+            const carritoButton = document.getElementById('carrito-button');
+            const carrito = document.getElementById('carrito');
+            const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+            const pagarCarritoBtn = document.getElementById('ir-a-pagar');
+            const carritoCount = document.getElementById('carrito-count');
+            const totalCarrito = document.getElementById('total-carrito');
+            let articulosCarrito = cargarCarritoDeLocalStorage();
+
+            actualizarCarrito();
+
+            if (listaCursosSemanales) {
+                listaCursosSemanales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'semanal');
+                    }
+                });
+            }
+
+            if (listaCursosMensuales) {
+                listaCursosMensuales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'mensual');
+                    }
+                });
+            }
+
+            if (tbody) {
+                tbody.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('borrar-curso')) {
+                        eliminarCursoDelCarrito(e.target);
+                    }
+                });
+            }
+
+            if (carritoButton) {
+                carritoButton.addEventListener('click', function () {
+                    carrito.style.display = carrito.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+
+            if (vaciarCarritoBtn) {
+                vaciarCarritoBtn.addEventListener('click', function () {
+                    articulosCarrito = [];
+                    guardarCarritoEnLocalStorage();
+                    actualizarCarrito();
+                });
+            }
+
+            if (pagarCarritoBtn) {
+                pagarCarritoBtn.addEventListener('click', function () {
+                    window.location.href = '{% url "pagar" %}';
+                });
+            }
+
+            function agregarCursoAlCarrito(curso, tipo) {
+                const infoCurso = {
+                    id: curso.querySelector('button').getAttribute('data-id'),
+                    titulo: curso.querySelector('.card-title').textContent,
+                    precio: parseFloat(curso.querySelector('span').textContent.replace('$', '').replace('.', '').replace(',', '.')),
+                    tipo: tipo,
+                    cantidad: 1
+                };
+
+                const existe = articulosCarrito.some(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo);
+                if (existe) {
+                    articulosCarrito = articulosCarrito.map(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo ? { ...curso, cantidad: curso.cantidad + 1 } : curso);
+                } else {
+                    articulosCarrito.push(infoCurso);
+                }
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function eliminarCursoDelCarrito(elemento) {
+                const id = elemento.getAttribute('data-id');
+                articulosCarrito = articulosCarrito.filter(curso => curso.id !== id);
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function actualizarCarrito() {
+                limpiarHTML();
+                articulosCarrito.forEach(curso => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${curso.titulo}</td>
+                        <td>$${curso.precio.toFixed(2)}</td>
+                        <td>${curso.cantidad}</td>
+                        <td><button class="btn btn-danger btn-sm borrar-curso" data-id="${curso.id}">X</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                carritoCount.textContent = articulosCarrito.reduce((total, curso) => total + curso.cantidad, 0);
+                totalCarrito.textContent = articulosCarrito.reduce((total, curso) => total + curso.precio * curso.cantidad, 0).toFixed(2);
+            }
+
+            function limpiarHTML() {
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+            }
+
+            function guardarCarritoEnLocalStorage() {
+                localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
+            }
+
+            function cargarCarritoDeLocalStorage() {
+                return localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : [];
+            }
+        });
+    </script>
 </body>
 </html>

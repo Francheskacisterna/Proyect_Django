@@ -1,0 +1,534 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'img/Logo.png' %}">
+    <title>LBWUS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'alumnos/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'alumnos/style/estilo.css' %}">
+    <script src="{% static 'alumnos/js/bootstrap.min.js' %}"></script>
+    <style>
+        .section-fullscreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-img {
+            max-width: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .about-img {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+
+        .carrito-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            padding: 20px;
+            min-width: 300px;
+            z-index: 1000;
+            border: 1px solid #ccc;
+        }
+
+        .carrito-icon {
+            position: relative;
+        }
+
+        .carrito-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand me-auto" href="#">
+                <img src="{% static 'alumnos/img/Logo.png' %}" alt="Logo" width="50px"
+                    class="d-inline-block align-text-top">
+                LBWUS
+            </a>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LBWUS</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 active" aria-current="page" href="{% url 'home_stud' %}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'planes_stud' %}">Planes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'servicios_stud' %}">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'nosotros_stud' %}">Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2" href="{% url 'contactos_stud' %}">Contactos</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if user.is_authenticated %}
+                                {{ user.username }}
+                                {% else %}
+                                Login
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
+                                {% if user.is_authenticated %}
+                                <!-- Enlace de cierre de sesión utilizando un formulario -->
+                                <a class="dropdown-item" href="#"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar
+                                    sesión</a>
+                                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                                    {% csrf_token %}
+                                </form>
+                                {% else %}
+                                <a class="dropdown-item" href="{% url 'login' %}">Iniciar sesión</a>
+                                {% endif %}
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <!-- Botón para cambiar el tema con iconos -->
+            <button onclick="toggleTheme()" id="theme-toggler" class="btn btn-outline-light ms-2">
+                <i class="bi bi-sun"></i> <!-- Icono predeterminado para el tema claro -->
+            </button>
+            <!-- Carrito de compras icono y desplegable -->
+            <div class="submenu">
+                <button id="carrito-button" class="btn btn-outline-light ms-2 carrito-icon">
+                    <i class="bi bi-cart-fill"></i> <!-- Icono de carrito de Bootstrap -->
+                    <span id="carrito-count" class="carrito-count">0</span>
+                </button>
+                <div id="carrito" class="carrito-dropdown">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-carrito"></tbody>
+                    </table>
+                    <div class="text-end">
+                        <strong>Total: $<span id="total-carrito">0</span></strong>
+                    </div>
+                    <button id="vaciar-carrito" class="btn btn-danger w-100 mt-2">Vaciar Carrito</button>
+                    <button id="ir-a-pagar" class="btn btn-primary w-100 mt-2">Pagar</button>
+                </div>
+            </div>
+            <!-- Fin Carrito -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <!--End Navbar-->
+
+    <!-- Imagen -->
+    <div class="container-fluid px-0 my-5">
+        <div class="row g-0">
+            <div class="col-12 text-center">
+                <img src="{% static 'alumnos/img/uni449.png' %}" class="img-fluid w-100" alt="Imagen completa">
+                <div class="image-caption my-3">
+                    <a href="#" class="btn btn-warning mt-3 mi-boton">Pincha aquí</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- fin de la Imagen -->
+
+    <!-- Lista de Cursos -->
+    <section id="services" class="services section-padding">
+        <div class="container">
+            <!-- Título y descripción de la sección -->
+            <div class="row">
+                <div class="col-12 text-center pb-5">
+                    <h2 class="text-uppercase font-weight-bold">Nuestros Servicios</h2>
+                    <p class="text-secondary">Descubre las características únicas de nuestros planes de estudio y
+                        encuentra la opción perfecta para ti.</p>
+                </div>
+            </div>
+
+            <!-- Separación de valores semanales y mensuales -->
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-center">Valores Semanales</h3>
+                </div>
+            </div>
+
+            <div class="row" id="lista-cursos-semanales">
+                <!-- Tarjeta del plan Básico -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Básico</h3>
+                            <ul class="lista">
+                                <li>Clases online</li>
+                                <li>1 día a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Dudas solo vía correo</li>
+                                <li>Horarios Pre-definidos</li>
+                                <li>1 ramo</li>
+                                <li>Valor Semanal <span>$19.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="1" data-precio="19990"
+                                data-tipo="semanal">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tarjeta del plan Medio -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Medio</h3>
+                            <ul class="lista">
+                                <li>Clases online</li>
+                                <li>2 días a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Dudas solo vía correo</li>
+                                <li>Horarios definidos</li>
+                                <li>1 a 2 ramos</li>
+                                <li>Valor Semanal <span>$39.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="2" data-precio="39990"
+                                data-tipo="semanal">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tarjeta del plan Superior -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Superior</h3>
+                            <ul class="lista">
+                                <li>Clases presenciales o online</li>
+                                <li>4 días a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Simulación de pruebas</li>
+                                <li>Horario flexible</li>
+                                <li>2 a 3 ramos diferentes</li>
+                                <li>Valor Semanal <span>$59.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="3" data-precio="59990"
+                                data-tipo="semanal">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valores Mensuales -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h3 class="text-center">Valores Mensuales</h3>
+                </div>
+            </div>
+
+            <div class="row" id="lista-cursos-mensuales">
+                <!-- Tarjeta del plan Básico -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Básico</h3>
+                            <ul class="lista">
+                                <li>Clases online</li>
+                                <li>1 día a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Dudas solo vía correo</li>
+                                <li>Horarios Pre-definidos</li>
+                                <li>1 ramo</li>
+                                <li>Valor mensual <span>$69.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="4" data-precio="69990"
+                                data-tipo="mensual">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tarjeta del plan Medio -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Medio</h3>
+                            <ul class="lista">
+                                <li>Clases online</li>
+                                <li>2 días a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Dudas solo vía correo</li>
+                                <li>Horarios definidos</li>
+                                <li>1 a 2 ramos</li>
+                                <li>Valor mensual <span>$139.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="5" data-precio="139990"
+                                data-tipo="mensual">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tarjeta del plan Superior -->
+                <div class="col-12 col-md-4">
+                    <div class="card text-white bg-dark text-center pb-2">
+                        <div class="card-body">
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="card-title">Plan Superior</h3>
+                            <ul class="lista">
+                                <li>Clases presenciales o online</li>
+                                <li>4 días a la semana</li>
+                                <li>Material de apoyo</li>
+                                <li>Simulación de pruebas</li>
+                                <li>Horario flexible</li>
+                                <li>2 a 3 ramos diferentes</li>
+                                <li>Valor mensual <span>$189.990</span></li>
+                            </ul>
+                            <button class="btn btn-primary agregar-carrito" data-id="6" data-precio="189990"
+                                data-tipo="mensual">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Lista de Cursos -->
+    <!-- Inicio de modal -->
+    <section class="modal">
+        <div class="modal__container">
+            <img src="{% static 'alumnos/img/Rocket Boy.png' %}" class="modal__img">
+            <h2 class="modal__title">¡Bienvenido a nuestra sección de planes!</h2>
+            <p class="modal__paragraph">Estamos aquí para asegurar una experiencia fluida y sin complicaciones. Si
+                tienes preguntas, te recordamos que puedes visitar nuestra sección línea de atención telefónica para
+                ayudarte más eficientemente. Explora nuestros planes y descubre cómo podemos apoyarte en tu educación.
+            </p>
+            <a href="planes.html" class="modal__close">Volver</a>
+        </div>
+    </section>
+    <!-- Fin de Modal -->
+
+    <footer class="footer">
+        <div class="container container-footer">
+            <div class="menu-footer">
+                <div class="contact-info">
+                    <p class="title-footer">Información de Contacto</p>
+                    <ul>
+                        <li class="infocontact">
+                            Dirección: Pacifico Norte 123 <br> Vernon Rockville, CT 06066
+                        </li>
+                        <li>Teléfono: 123-456-7890</li>
+                        <li>Email: teachers@lbwus.cl</li>
+                    </ul>
+                    <div class="social-icons">
+                        <span class="facebook">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </span>
+                        <span class="twitter">
+                            <i class="fa-brands fa-twitter"></i>
+                        </span>
+                        <span class="youtube">
+                            <i class="fa-brands fa-youtube"></i>
+                        </span>
+                        <span class="pinterest">
+                            <i class="fa-brands fa-pinterest-p"></i>
+                        </span>
+                        <span class="instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="information">
+                    <p class="title-footer">Información</p>
+                    <ul class="infofo">
+                        <li><a href="#">Acerca de Nosotros</a></li>
+                        <li><a href="#">Estado de tus contrataciones</a></li>
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y condiciones</a></li>
+                        <li><a href="#">Contáctanos</a></li>
+                    </ul>
+                </div>
+
+                <div class="my-account">
+                    <p class="title-footer">Mi cuenta</p>
+                    <ul class="mi-cuenta">
+                        <li><a href="#">Mi cuenta</a></li>
+                        <li><a href="#">Historial de ordenes</a></li>
+                        <li><a href="#">Lista de deseos</a></li>
+                        <li><a href="#">Boletín</a></li>
+                        <li><a href="#">Reembolsos</a></li>
+                    </ul>
+                </div>
+
+                <div class="newsletter">
+                    <p class="title-footer">Boletín informativo</p>
+                    <div class="content">
+                        <p>Suscríbete a nuestros boletines ahora y mantente al día con nuevas colecciones y ofertas
+                            exclusivas.</p>
+                        <input type="email" placeholder="Ingresa el correo aquí...">
+                        <button>Suscríbete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>Desarrollando enseñanza para el mundo &copy; 2024</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS de Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <!-- JS Personalizado -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listaCursosSemanales = document.getElementById('lista-cursos-semanales');
+            const listaCursosMensuales = document.getElementById('lista-cursos-mensuales');
+            const tbody = document.querySelector('#lista-carrito');
+            const carritoButton = document.getElementById('carrito-button');
+            const carrito = document.getElementById('carrito');
+            const vaciarCarritoBtn = document.getElementById('vaciar-carrito');
+            const pagarCarritoBtn = document.getElementById('ir-a-pagar');
+            const carritoCount = document.getElementById('carrito-count');
+            const totalCarrito = document.getElementById('total-carrito');
+            let articulosCarrito = cargarCarritoDeLocalStorage();
+
+            actualizarCarrito();
+
+            if (listaCursosSemanales) {
+                listaCursosSemanales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'semanal');
+                    }
+                });
+            }
+
+            if (listaCursosMensuales) {
+                listaCursosMensuales.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('agregar-carrito')) {
+                        const cursoCard = e.target.closest('.card');
+                        agregarCursoAlCarrito(cursoCard, 'mensual');
+                    }
+                });
+            }
+
+            if (tbody) {
+                tbody.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('borrar-curso')) {
+                        eliminarCursoDelCarrito(e.target);
+                    }
+                });
+            }
+
+            if (carritoButton) {
+                carritoButton.addEventListener('click', function () {
+                    carrito.style.display = carrito.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+
+            if (vaciarCarritoBtn) {
+                vaciarCarritoBtn.addEventListener('click', function () {
+                    articulosCarrito = [];
+                    guardarCarritoEnLocalStorage();
+                    actualizarCarrito();
+                });
+            }
+
+            if (pagarCarritoBtn) {
+                pagarCarritoBtn.addEventListener('click', function () {
+                    window.location.href = '{% url "pagar" %}';
+                });
+            }
+
+            function agregarCursoAlCarrito(curso, tipo) {
+                const infoCurso = {
+                    id: curso.querySelector('button').getAttribute('data-id'),
+                    titulo: curso.querySelector('.card-title').textContent,
+                    precio: parseFloat(curso.querySelector('span').textContent.replace('$', '').replace('.', '').replace(',', '.')),
+                    tipo: tipo,
+                    cantidad: 1
+                };
+
+                const existe = articulosCarrito.some(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo);
+                if (existe) {
+                    articulosCarrito = articulosCarrito.map(curso => curso.id === infoCurso.id && curso.tipo === infoCurso.tipo ? { ...curso, cantidad: curso.cantidad + 1 } : curso);
+                } else {
+                    articulosCarrito.push(infoCurso);
+                }
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function eliminarCursoDelCarrito(elemento) {
+                const id = elemento.getAttribute('data-id');
+                articulosCarrito = articulosCarrito.filter(curso => curso.id !== id);
+                guardarCarritoEnLocalStorage();
+                actualizarCarrito();
+            }
+
+            function actualizarCarrito() {
+                limpiarHTML();
+                articulosCarrito.forEach(curso => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${curso.titulo}</td>
+                <td>$${curso.precio.toFixed(2)}</td>
+                <td>${curso.cantidad}</td>
+                <td><button class="btn btn-danger btn-sm borrar-curso" data-id="${curso.id}">X</button></td>
+            `;
+                    tbody.appendChild(row);
+                });
+                carritoCount.textContent = articulosCarrito.reduce((total, curso) => total + curso.cantidad, 0);
+                totalCarrito.textContent = articulosCarrito.reduce((total, curso) => total + curso.precio * curso.cantidad, 0).toFixed(2);
+            }
+
+            function limpiarHTML() {
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+            }
+
+            function guardarCarritoEnLocalStorage() {
+                localStorage.setItem('carrito', JSON.stringify(articulosCarrito));
+            }
+
+            function cargarCarritoDeLocalStorage() {
+                return localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : [];
+            }
+        });
+
+    </script>
+</body>
+
+</html>
